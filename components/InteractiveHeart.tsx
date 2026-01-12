@@ -5,13 +5,15 @@ import {
   SpringElement,
   SpringProvider,
 } from "@/components/animate-ui/primitives/animate/spring";
+import loversImg from "@/public/lovers.svg";
+import heartImg from "@/public/heart.svg";
 
 const InteractiveHeart = memo(() => {
   return (
     <div className="relative flex size-60 shrink-0 flex-col items-center justify-center">
       <SpringProvider>
         <Image
-          src="/lovers.svg"
+          src={loversImg}
           alt="Lovers"
           fill
           className="absolute object-contain"
@@ -21,7 +23,7 @@ const InteractiveHeart = memo(() => {
         <Spring className="text-gray-400" />
         <SpringElement className="z-1 cursor-grab active:cursor-grabbing">
           <Image
-            src="/heart.svg"
+            src={heartImg}
             alt="Heart"
             width={48}
             height={40}
