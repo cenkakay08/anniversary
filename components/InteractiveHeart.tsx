@@ -54,8 +54,8 @@ InteractiveHeartContent.displayName = "InteractiveHeartContent";
 
 const InteractiveHeart = memo(() => {
   return (
-    <div className="flex shrink-0 flex-col items-center gap-2">
-      <div className="relative flex aspect-[15/8] w-[180px] flex-col items-center justify-center sm:w-60">
+    <div className="flex w-full shrink-0 flex-col items-center gap-2 overflow-x-clip">
+      <div className="relative flex aspect-15/8 w-[180px] flex-col items-center justify-center sm:w-60">
         <SpringProvider>
           <InteractiveHeartContent />
         </SpringProvider>
