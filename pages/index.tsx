@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 // Bileşen render sırası ve gecikmeleri (ms)
 const RENDER_DELAYS = {
   duration: 0,
-  memoryGallery: 200,
-  interactiveHeart: 400,
+  interactiveHeart: 200,
+  memoryGallery: 400,
 } as const;
 
 export default function Home() {
