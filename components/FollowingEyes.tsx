@@ -27,89 +27,58 @@ const EYE_CENTERS = {
 } as const;
 
 const FollowingEyes = memo(({ springX, springY }: FollowingEyesProps) => {
-  // Memoized clamp fonksiyonları
-  const clampLeftX = useMemo(
-    () => (v: number) =>
-      clamp(v + LEFT_PERSON_X_OFFSET, -MAX_PUPIL_OFFSET, MAX_PUPIL_OFFSET),
-    [],
+  // Yardımcı hesaplama fonksiyonu
+  const calculatePupilPos = (
+    val: number,
+    personOffset: number,
+    eyeCenter: number,
+  ) => {
+    // 1. Normalize ve Scale (baseX/Y)
+    // Input [-100, 0, 100] -> Output [-0.35, 0, 0.35]
+    // Lineer interpolasyon: (val - -100) * (0.35 - -0.35) / (100 - -100) + -0.35
+    // Basitleştirilmiş: val * (0.35 / 100)
+    const base = val * (MAX_PUPIL_OFFSET / NORMALIZE_RANGE);
+
+    // 2. Person Offset ve Clamp
+    const clamped = clamp(
+      base + personOffset,
+      -MAX_PUPIL_OFFSET,
+      MAX_PUPIL_OFFSET,
+    );
+
+    // 3. Final Pozisyon
+    return eyeCenter - PUPIL_SIZE / 2 + clamped;
+  };
+
+  // Sol Kişi (offset: 0.2)
+  const leftLeftX = useTransform(springX, (v) =>
+    calculatePupilPos(v, LEFT_PERSON_X_OFFSET, EYE_CENTERS.leftPersonLeft.x),
+  );
+  const leftRightX = useTransform(springX, (v) =>
+    calculatePupilPos(v, LEFT_PERSON_X_OFFSET, EYE_CENTERS.leftPersonRight.x),
   );
 
-  const clampRightX = useMemo(
-    () => (v: number) =>
-      clamp(v + RIGHT_PERSON_X_OFFSET, -MAX_PUPIL_OFFSET, MAX_PUPIL_OFFSET),
-    [],
+  // Sağ Kişi (offset: -0.2)
+  const rightLeftX = useTransform(springX, (v) =>
+    calculatePupilPos(v, RIGHT_PERSON_X_OFFSET, EYE_CENTERS.rightPersonLeft.x),
+  );
+  const rightRightX = useTransform(springX, (v) =>
+    calculatePupilPos(v, RIGHT_PERSON_X_OFFSET, EYE_CENTERS.rightPersonRight.x),
   );
 
-  const clampY = useMemo(
-    () => (v: number) =>
-      clamp(v + INITIAL_Y_OFFSET, -MAX_PUPIL_OFFSET, MAX_PUPIL_OFFSET),
-    [],
+  // Y Eksenleri (ortak offset: 0.25)
+  const leftLeftY = useTransform(springY, (v) =>
+    calculatePupilPos(v, INITIAL_Y_OFFSET, EYE_CENTERS.leftPersonLeft.y),
   );
-
-  // Temel transform'lar - tam aralık hareket
-  const baseX = useTransform(
-    springX,
-    [-NORMALIZE_RANGE, 0, NORMALIZE_RANGE],
-    [-MAX_PUPIL_OFFSET, 0, MAX_PUPIL_OFFSET],
+  const leftRightY = useTransform(springY, (v) =>
+    calculatePupilPos(v, INITIAL_Y_OFFSET, EYE_CENTERS.leftPersonRight.y),
   );
-
-  const baseY = useTransform(
-    springY,
-    [-NORMALIZE_RANGE, 0, NORMALIZE_RANGE],
-    [-MAX_PUPIL_OFFSET, 0, MAX_PUPIL_OFFSET],
+  const rightLeftY = useTransform(springY, (v) =>
+    calculatePupilPos(v, INITIAL_Y_OFFSET, EYE_CENTERS.rightPersonLeft.y),
   );
-
-  // Sol kişinin göz bebekleri pozisyonları
-  const leftPersonPupilX = useTransform(baseX, clampLeftX);
-  const leftPersonPupilY = useTransform(baseY, clampY);
-
-  // Sağ kişinin göz bebekleri pozisyonları
-  const rightPersonPupilX = useTransform(baseX, clampRightX);
-  const rightPersonPupilY = useTransform(baseY, clampY);
-
-  // Memoized pozisyon hesaplama fonksiyonları
-  const leftLeftEyeXCalc = useMemo(
-    () => (v: number) => EYE_CENTERS.leftPersonLeft.x - PUPIL_SIZE / 2 + v,
-    [],
+  const rightRightY = useTransform(springY, (v) =>
+    calculatePupilPos(v, INITIAL_Y_OFFSET, EYE_CENTERS.rightPersonRight.y),
   );
-  const leftLeftEyeYCalc = useMemo(
-    () => (v: number) => EYE_CENTERS.leftPersonLeft.y - PUPIL_SIZE / 2 + v,
-    [],
-  );
-  const leftRightEyeXCalc = useMemo(
-    () => (v: number) => EYE_CENTERS.leftPersonRight.x - PUPIL_SIZE / 2 + v,
-    [],
-  );
-  const leftRightEyeYCalc = useMemo(
-    () => (v: number) => EYE_CENTERS.leftPersonRight.y - PUPIL_SIZE / 2 + v,
-    [],
-  );
-  const rightLeftEyeXCalc = useMemo(
-    () => (v: number) => EYE_CENTERS.rightPersonLeft.x - PUPIL_SIZE / 2 + v,
-    [],
-  );
-  const rightLeftEyeYCalc = useMemo(
-    () => (v: number) => EYE_CENTERS.rightPersonLeft.y - PUPIL_SIZE / 2 + v,
-    [],
-  );
-  const rightRightEyeXCalc = useMemo(
-    () => (v: number) => EYE_CENTERS.rightPersonRight.x - PUPIL_SIZE / 2 + v,
-    [],
-  );
-  const rightRightEyeYCalc = useMemo(
-    () => (v: number) => EYE_CENTERS.rightPersonRight.y - PUPIL_SIZE / 2 + v,
-    [],
-  );
-
-  // Final pozisyon transform'ları
-  const leftLeftX = useTransform(leftPersonPupilX, leftLeftEyeXCalc);
-  const leftLeftY = useTransform(leftPersonPupilY, leftLeftEyeYCalc);
-  const leftRightX = useTransform(leftPersonPupilX, leftRightEyeXCalc);
-  const leftRightY = useTransform(leftPersonPupilY, leftRightEyeYCalc);
-  const rightLeftX = useTransform(rightPersonPupilX, rightLeftEyeXCalc);
-  const rightLeftY = useTransform(rightPersonPupilY, rightLeftEyeYCalc);
-  const rightRightX = useTransform(rightPersonPupilX, rightRightEyeXCalc);
-  const rightRightY = useTransform(rightPersonPupilY, rightRightEyeYCalc);
 
   return (
     <svg

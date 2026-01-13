@@ -10,10 +10,20 @@ import loversImg from "@/public/lovers.svg";
 import heartImg from "@/public/heart.svg";
 import FollowingEyes from "@/components/FollowingEyes";
 
-// İç bileşen - SpringProvider içinde useSpring kullanabilmek için
-const InteractiveHeartContent = memo(() => {
+// useSpring'i kullanan wrapper component - sadece bu re-render olur
+const ConnectedFollowingEyes = memo(() => {
   const { springX, springY } = useSpring();
+  // springX ve springY MotionValue olduğu için referansları değişmez,
+  // ancak context value değiştiğinde bu component re-render olabilir.
+  // FollowingEyes zaten memo'lu olduğu için prop değişmediği sürece re-render olmaz.
+  return <FollowingEyes springX={springX} springY={springY} />;
+});
 
+ConnectedFollowingEyes.displayName = "ConnectedFollowingEyes";
+
+// İç bileşen artık useSpring hook'unu doğrudan kullanmıyor
+// Böylece context updates (isDragging vb.) bu bileşeni re-render etmiyor
+const InteractiveHeartContent = memo(() => {
   return (
     <>
       <Image
@@ -24,7 +34,7 @@ const InteractiveHeartContent = memo(() => {
         draggable={false}
         priority
       />
-      <FollowingEyes springX={springX} springY={springY} />
+      <ConnectedFollowingEyes />
       <Spring className="text-gray-400" />
       <SpringElement className="z-1 cursor-grab active:cursor-grabbing">
         <Image
