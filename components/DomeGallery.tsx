@@ -282,16 +282,31 @@ export default function DomeGallery({
 
           const hasCustomSize = openedImageWidth && openedImageHeight;
           if (hasCustomSize) {
-            const tempDiv = document.createElement("div");
-            tempDiv.style.cssText = `position: absolute; width: ${openedImageWidth}; height: ${openedImageHeight}; visibility: hidden;`;
-            document.body.appendChild(tempDiv);
-            const tempRect = tempDiv.getBoundingClientRect();
-            document.body.removeChild(tempDiv);
+            // Style'ı prop değerlerine güncelle
+            enlargedOverlay.style.width = openedImageWidth;
+            enlargedOverlay.style.height = openedImageHeight;
 
+            // Layout reflow
+            void enlargedOverlay.offsetWidth;
+
+            const overlayRect = enlargedOverlay.getBoundingClientRect();
+
+            // parentRect hesabı (offsetParent kimse ona göre)
+            const offsetParent =
+              (enlargedOverlay.offsetParent as HTMLElement) || document.body;
+            const parentRect = offsetParent.getBoundingClientRect();
+
+            // Overlay'in offsetParent içindeki konumu:
+            // Frame'in solundan parent'ın solunu çıkar (parent içindeki frame offseti)
+            // + Frame içinde ortala
             const centeredLeft =
-              frameR.left - mainR.left + (frameR.width - tempRect.width) / 2;
+              frameR.left -
+              parentRect.left +
+              (frameR.width - overlayRect.width) / 2;
             const centeredTop =
-              frameR.top - mainR.top + (frameR.height - tempRect.height) / 2;
+              frameR.top -
+              parentRect.top +
+              (frameR.height - overlayRect.height) / 2;
 
             enlargedOverlay.style.left = `${centeredLeft}px`;
             enlargedOverlay.style.top = `${centeredTop}px`;
