@@ -1,0 +1,17 @@
+name: Self Approve
+
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  approve:
+    if: github.actor == 'cenkakay08'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Approve
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr review ${{ github.event.pull_request.number }} --approve --repo ${{ github.repository }}
