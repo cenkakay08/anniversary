@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import * as React from 'react';
+import * as React from "react";
 import {
   motion,
   useMotionValue,
@@ -8,11 +8,14 @@ import {
   type SpringOptions,
   type HTMLMotionProps,
   type MotionValue,
-} from 'motion/react';
+} from "motion/react";
 
-import { useMotionValueState } from '@/hooks/use-motion-value-state';
-import { getStrictContext } from '@/lib/get-strict-context';
-import { Slot, type WithAsChild } from '@/components/animate-ui/primitives/animate/slot';
+import { useMotionValueState } from "@/hooks/use-motion-value-state";
+import { getStrictContext } from "@/lib/get-strict-context";
+import {
+  Slot,
+  type WithAsChild,
+} from "@/components/animate-ui/primitives/animate/slot";
 
 type SpringPathConfig = {
   coilCount?: number;
@@ -84,7 +87,7 @@ function generateSpringPath(
     path.push(`C${c1x},${c1y} ${c2x},${c2y} ${mx},${my}`);
     path.push(`C${c3x},${c3y} ${c4x},${c4y} ${ex},${ey}`);
   }
-  return path.join(' ');
+  return path.join(" ");
 }
 
 type SpringContextType = {
@@ -100,7 +103,7 @@ type SpringContextType = {
 };
 
 const [LocalSpringProvider, useSpring] =
-  getStrictContext<SpringContextType>('SpringContext');
+  getStrictContext<SpringContextType>("SpringContext");
 
 type SpringProviderProps = {
   children: React.ReactNode;
@@ -131,31 +134,38 @@ function SpringProvider({
 
   React.useLayoutEffect(() => {
     function update() {
-      if (childRef.current) {
-        const rect = childRef.current.getBoundingClientRect();
-        setCenter({
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
-        });
-      }
+      requestAnimationFrame(() => {
+        if (childRef.current) {
+          const rect = childRef.current.getBoundingClientRect();
+          // Transform (spring effect) o anki konumunu etkiler.
+          // Sabit merkezi bulmak için mevcut displacement'ı çıkartmalıyız.
+          const currentX = springX.get();
+          const currentY = springY.get();
+
+          setCenter({
+            x: rect.left - currentX + rect.width / 2,
+            y: rect.top - currentY + rect.height / 2,
+          });
+        }
+      });
     }
 
     update();
 
-    window.addEventListener('resize', update);
-    window.addEventListener('scroll', update, true);
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
 
     return () => {
-      window.removeEventListener('resize', update);
-      window.removeEventListener('scroll', update, true);
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
     };
   }, []);
 
   React.useEffect(() => {
     if (isDragging) {
-      document.body.style.cursor = 'grabbing';
+      document.body.style.cursor = "grabbing";
     } else {
-      document.body.style.cursor = 'default';
+      document.body.style.cursor = "default";
     }
   }, [isDragging]);
 
@@ -195,9 +205,9 @@ function Spring({ style, ...props }: SpringProps) {
       width="100vw"
       height="100vh"
       style={{
-        position: 'fixed',
+        position: "fixed",
         inset: 0,
-        pointerEvents: 'none',
+        pointerEvents: "none",
         ...style,
       }}
       {...props}
@@ -215,7 +225,7 @@ function Spring({ style, ...props }: SpringProps) {
 }
 
 type SpringElementProps = WithAsChild<
-  Omit<HTMLMotionProps<'div'>, 'children'> & {
+  Omit<HTMLMotionProps<"div">, "children"> & {
     children: React.ReactElement;
   }
 >;
@@ -245,7 +255,7 @@ function SpringElement({
     <Component
       ref={childRef}
       style={{
-        cursor: isDragging ? 'grabbing' : 'grab',
+        cursor: isDragging ? "grabbing" : "grab",
         x: springX,
         y: springY,
         ...style,
