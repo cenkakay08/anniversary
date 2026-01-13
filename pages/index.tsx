@@ -63,7 +63,7 @@ export default function Home() {
   return (
     <>
       <main
-        className={`relative z-1 flex size-full flex-col items-center gap-12 overflow-auto ${geistSans.className} ${geistMono.className}`}
+        className={`relative z-1 flex size-full flex-col items-center gap-6 overflow-auto sm:gap-12 ${geistSans.className} ${geistMono.className}`}
       >
         <WelcomeText onBackdropAnimationEnd={onBackdropAnimationEnd} />
         {isContentVisible && (

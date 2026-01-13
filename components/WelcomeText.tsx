@@ -20,7 +20,7 @@ export const WelcomeText = React.memo(
       <>
         <SplitText
           text="Happy Anniversary, My Love ❤️"
-          className={`shrink-0 pt-8 text-center text-2xl font-semibold sm:text-5xl ${isLiftAnimationCompleted ? "" : "opacity-0"}`}
+          className={`shrink-0 px-4 pt-8 text-center text-4xl font-semibold sm:text-5xl ${isLiftAnimationCompleted ? "" : "opacity-0"}`}
           delay={100}
           duration={0.2}
           ease="power3.out"
@@ -41,7 +41,7 @@ export const WelcomeText = React.memo(
           >
             <SplitText
               text="Happy Anniversary, My Love ❤️"
-              className={`pt-8 text-center text-2xl font-semibold sm:text-5xl`}
+              className={`px-4 pt-8 text-center text-4xl font-semibold sm:text-5xl`}
               delay={100}
               duration={0.2}
               ease="power3.out"
