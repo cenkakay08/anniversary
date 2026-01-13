@@ -69,8 +69,8 @@ export default function Home() {
         {isContentVisible && (
           <>
             {showDuration && <Duration />}
-            {showMemoryGallery && <MemoryGallery />}
             {showInteractiveHeart && <InteractiveHeart />}
+            {showMemoryGallery && <MemoryGallery />}
             {/* <AnniversaryMenu /> */}
           </>
         )}

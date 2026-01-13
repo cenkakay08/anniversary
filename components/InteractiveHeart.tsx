@@ -44,10 +44,13 @@ InteractiveHeartContent.displayName = "InteractiveHeartContent";
 
 const InteractiveHeart = memo(() => {
   return (
-    <div className="relative flex h-[150px] w-[150px] shrink-0 flex-col items-center justify-center sm:size-60">
-      <SpringProvider>
-        <InteractiveHeartContent />
-      </SpringProvider>
+    <div className="flex shrink-0 flex-col items-center gap-2">
+      <div className="relative flex h-[180px] w-[180px] flex-col items-center justify-center sm:size-60">
+        <SpringProvider>
+          <InteractiveHeartContent />
+        </SpringProvider>
+      </div>
+      <p className="text-xs text-white/40 sm:text-sm">Drag the heart! 💕</p>
     </div>
   );
 });
