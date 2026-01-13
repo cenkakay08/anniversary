@@ -734,7 +734,24 @@ export default function DomeGallery({
       --item-height: calc(var(--circ) / var(--segments-y));
     }
     
-    .sphere-root * { box-sizing: border-box; }
+    .sphere-root * { 
+      box-sizing: border-box;
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+    }
+    
+    .sphere-root img {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+      pointer-events: none;
+    }
+    
     .sphere, .sphere-item, .item__image { transform-style: preserve-3d; }
     
     .stage {
@@ -825,7 +842,7 @@ export default function DomeGallery({
           ref={mainRef}
           className="absolute inset-0 grid place-items-center overflow-hidden bg-transparent select-none"
           style={{
-            touchAction: "none",
+            touchAction: "pan-y",
             WebkitUserSelect: "none",
           }}
         >
