@@ -397,8 +397,7 @@ export default function DomeGallery({
 
         const evt = event as PointerEvent;
         pointerTypeRef.current = (evt.pointerType as any) || "mouse";
-        if (pointerTypeRef.current === "touch") evt.preventDefault();
-        if (pointerTypeRef.current === "touch") evt.preventDefault();
+
         draggingRef.current = true;
         cancelTapRef.current = false;
         movedRef.current = false;
@@ -412,10 +411,15 @@ export default function DomeGallery({
       onDrag: ({
         event,
         last,
+        canceled,
         velocity: velArr = [0, 0],
         direction: dirArr = [0, 0],
-        movement,
+        movement: [mx, my],
       }) => {
+        if (canceled) {
+          draggingRef.current = false;
+          return;
+        }
         if (
           focusedElRef.current ||
           !draggingRef.current ||
@@ -424,10 +428,10 @@ export default function DomeGallery({
           return;
 
         const evt = event as PointerEvent;
-        if (pointerTypeRef.current === "touch") evt.preventDefault();
 
-        const dxTotal = evt.clientX - startPosRef.current.x;
-        const dyTotal = evt.clientY - startPosRef.current.y;
+        // Manuel hesap yerine movement kullanıyoruz
+        const dxTotal = mx;
+        const dyTotal = my;
 
         if (!movedRef.current) {
           const dist2 = dxTotal * dxTotal + dyTotal * dyTotal;
@@ -466,13 +470,7 @@ export default function DomeGallery({
           let vx = vMagX * dirX;
           let vy = vMagY * dirY;
 
-          if (
-            !isTap &&
-            Math.abs(vx) < 0.001 &&
-            Math.abs(vy) < 0.001 &&
-            Array.isArray(movement)
-          ) {
-            const [mx, my] = movement;
+          if (!isTap && Math.abs(vx) < 0.001 && Math.abs(vy) < 0.001) {
             vx = (mx / dragSensitivity) * 0.02;
             vy = (my / dragSensitivity) * 0.02;
           }
@@ -884,7 +882,7 @@ export default function DomeGallery({
           ref={mainRef}
           className="absolute inset-0 grid place-items-center overflow-hidden bg-transparent select-none"
           style={{
-            touchAction: "none",
+            touchAction: "pan-y",
             WebkitUserSelect: "none",
           }}
         >
