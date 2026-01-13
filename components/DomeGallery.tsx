@@ -204,92 +204,112 @@ export default function DomeGallery({
 
   const items = useMemo(() => buildItems(images, segments), [images, segments]);
 
-  const applyTransform = (xDeg: number, yDeg: number) => {
+  const applyTransform = useCallback((xDeg: number, yDeg: number) => {
     const el = sphereRef.current;
     if (el) {
-      el.style.transform = `translateZ(calc(var(--radius) * -1)) rotateX(${xDeg}deg) rotateY(${yDeg}deg)`;
+      // Optimizasyon: lockedRadiusRef varsa doğrudan pixel değeri kullan, yoksa CSS var'a fallback yap (ilk render shift riskini azaltır ama radius genelde resize'da set edilir)
+      const r = lockedRadiusRef.current;
+      const dist = r !== null ? `-${r}px` : `calc(var(--radius) * -1)`;
+      el.style.transform = `translateZ(${dist}) rotateX(${xDeg}deg) rotateY(${yDeg}deg)`;
     }
-  };
+  }, []);
 
   const lockedRadiusRef = useRef<number | null>(null);
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
+
+    let rafId: number | null = null;
+
     const ro = new ResizeObserver((entries) => {
-      const cr = entries[0].contentRect;
-      const w = Math.max(1, cr.width),
-        h = Math.max(1, cr.height);
-      const minDim = Math.min(w, h),
-        maxDim = Math.max(w, h),
-        aspect = w / h;
-      let basis: number;
-      switch (fitBasis) {
-        case "min":
-          basis = minDim;
-          break;
-        case "max":
-          basis = maxDim;
-          break;
-        case "width":
-          basis = w;
-          break;
-        case "height":
-          basis = h;
-          break;
-        default:
-          basis = aspect >= 1.3 ? w : minDim;
-      }
-      let radius = basis * fit;
-      const heightGuard = h * 1.35;
-      radius = Math.min(radius, heightGuard);
-      radius = clamp(radius, minRadius, maxRadius);
-      lockedRadiusRef.current = Math.round(radius);
+      // Throttle resize updates with requestAnimationFrame
+      if (rafId) return;
 
-      const viewerPad = Math.max(8, Math.round(minDim * padFactor));
-      root.style.setProperty("--radius", `${lockedRadiusRef.current}px`);
-      root.style.setProperty("--viewer-pad", `${viewerPad}px`);
-      root.style.setProperty("--overlay-blur-color", overlayBlurColor);
-      root.style.setProperty("--tile-radius", imageBorderRadius);
-      root.style.setProperty("--enlarge-radius", openedImageBorderRadius);
-      root.style.setProperty(
-        "--image-filter",
-        grayscale ? "grayscale(1)" : "none",
-      );
-      applyTransform(rotationRef.current.x, rotationRef.current.y);
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
 
-      const enlargedOverlay = viewerRef.current?.querySelector(
-        ".enlarge",
-      ) as HTMLElement;
-      if (enlargedOverlay && frameRef.current && mainRef.current) {
-        const frameR = frameRef.current.getBoundingClientRect();
-        const mainR = mainRef.current.getBoundingClientRect();
+        const entry = entries[0];
+        if (!entry) return;
 
-        const hasCustomSize = openedImageWidth && openedImageHeight;
-        if (hasCustomSize) {
-          const tempDiv = document.createElement("div");
-          tempDiv.style.cssText = `position: absolute; width: ${openedImageWidth}; height: ${openedImageHeight}; visibility: hidden;`;
-          document.body.appendChild(tempDiv);
-          const tempRect = tempDiv.getBoundingClientRect();
-          document.body.removeChild(tempDiv);
-
-          const centeredLeft =
-            frameR.left - mainR.left + (frameR.width - tempRect.width) / 2;
-          const centeredTop =
-            frameR.top - mainR.top + (frameR.height - tempRect.height) / 2;
-
-          enlargedOverlay.style.left = `${centeredLeft}px`;
-          enlargedOverlay.style.top = `${centeredTop}px`;
-        } else {
-          enlargedOverlay.style.left = `${frameR.left - mainR.left}px`;
-          enlargedOverlay.style.top = `${frameR.top - mainR.top}px`;
-          enlargedOverlay.style.width = `${frameR.width}px`;
-          enlargedOverlay.style.height = `${frameR.height}px`;
+        const cr = entry.contentRect;
+        const w = Math.max(1, cr.width),
+          h = Math.max(1, cr.height);
+        const minDim = Math.min(w, h),
+          maxDim = Math.max(w, h),
+          aspect = w / h;
+        let basis: number;
+        switch (fitBasis) {
+          case "min":
+            basis = minDim;
+            break;
+          case "max":
+            basis = maxDim;
+            break;
+          case "width":
+            basis = w;
+            break;
+          case "height":
+            basis = h;
+            break;
+          default:
+            basis = aspect >= 1.3 ? w : minDim;
         }
-      }
+        let radius = basis * fit;
+        const heightGuard = h * 1.35;
+        radius = Math.min(radius, heightGuard);
+        radius = clamp(radius, minRadius, maxRadius);
+        lockedRadiusRef.current = Math.round(radius);
+
+        const viewerPad = Math.max(8, Math.round(minDim * padFactor));
+        root.style.setProperty("--radius", `${lockedRadiusRef.current}px`);
+        root.style.setProperty("--viewer-pad", `${viewerPad}px`);
+        root.style.setProperty("--overlay-blur-color", overlayBlurColor);
+        root.style.setProperty("--tile-radius", imageBorderRadius);
+        root.style.setProperty("--enlarge-radius", openedImageBorderRadius);
+        root.style.setProperty(
+          "--image-filter",
+          grayscale ? "grayscale(1)" : "none",
+        );
+        applyTransform(rotationRef.current.x, rotationRef.current.y);
+
+        const enlargedOverlay = viewerRef.current?.querySelector(
+          ".enlarge",
+        ) as HTMLElement;
+        if (enlargedOverlay && frameRef.current && mainRef.current) {
+          const frameR = frameRef.current.getBoundingClientRect();
+          const mainR = mainRef.current.getBoundingClientRect();
+
+          const hasCustomSize = openedImageWidth && openedImageHeight;
+          if (hasCustomSize) {
+            const tempDiv = document.createElement("div");
+            tempDiv.style.cssText = `position: absolute; width: ${openedImageWidth}; height: ${openedImageHeight}; visibility: hidden;`;
+            document.body.appendChild(tempDiv);
+            const tempRect = tempDiv.getBoundingClientRect();
+            document.body.removeChild(tempDiv);
+
+            const centeredLeft =
+              frameR.left - mainR.left + (frameR.width - tempRect.width) / 2;
+            const centeredTop =
+              frameR.top - mainR.top + (frameR.height - tempRect.height) / 2;
+
+            enlargedOverlay.style.left = `${centeredLeft}px`;
+            enlargedOverlay.style.top = `${centeredTop}px`;
+          } else {
+            enlargedOverlay.style.left = `${frameR.left - mainR.left}px`;
+            enlargedOverlay.style.top = `${frameR.top - mainR.top}px`;
+            enlargedOverlay.style.width = `${frameR.width}px`;
+            enlargedOverlay.style.height = `${frameR.height}px`;
+          }
+        }
+      });
     });
+
     ro.observe(root);
-    return () => ro.disconnect();
+    return () => {
+      ro.disconnect();
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [
     fit,
     fitBasis,
@@ -302,11 +322,13 @@ export default function DomeGallery({
     openedImageBorderRadius,
     openedImageWidth,
     openedImageHeight,
+    applyTransform,
   ]);
 
   useEffect(() => {
+    // Initial size calculation might be needed if ResizeObserver doesn't fire immediately or radius is needed before first resize
     applyTransform(rotationRef.current.x, rotationRef.current.y);
-  }, []);
+  }, [applyTransform]);
 
   const stopInertia = useCallback(() => {
     if (inertiaRAF.current) {
