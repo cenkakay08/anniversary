@@ -19,6 +19,7 @@ type DomeGalleryProps = {
   dragDampening?: number;
   openedImageWidth?: string;
   openedImageHeight?: string;
+  openedImageMaxHeight?: string;
   imageBorderRadius?: string;
   openedImageBorderRadius?: string;
   grayscale?: boolean;
@@ -86,8 +87,8 @@ const getDataNumber = (el: HTMLElement, name: string, fallback: number) => {
 
 function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
   const xCols = Array.from({ length: seg }, (_, i) => -37 + i * 2);
-  const evenYs = [-4, -2, 0, 2, 4];
-  const oddYs = [-3, -1, 1, 3, 5];
+  const evenYs = [-2, 0, 2];
+  const oddYs = [-1, 1, 3];
 
   const coords = xCols.flatMap((x, c) => {
     const ys = c % 2 === 0 ? evenYs : oddYs;
@@ -164,6 +165,7 @@ export default function DomeGallery({
   dragDampening = 2,
   openedImageWidth = "400px",
   openedImageHeight = "400px",
+  openedImageMaxHeight,
   imageBorderRadius = "30px",
   openedImageBorderRadius = "30px",
   grayscale = true,
@@ -710,6 +712,9 @@ export default function DomeGallery({
           overlay.style.top = `${centeredTop}px`;
           overlay.style.width = tempWidth;
           overlay.style.height = tempHeight;
+          if (openedImageMaxHeight) {
+            overlay.style.maxHeight = openedImageMaxHeight;
+          }
         });
         const cleanupSecond = () => {
           overlay.removeEventListener("transitionend", cleanupSecond);
@@ -842,7 +847,7 @@ export default function DomeGallery({
           ref={mainRef}
           className="absolute inset-0 grid place-items-center overflow-hidden bg-transparent select-none"
           style={{
-            touchAction: "pan-y",
+            touchAction: "pan-x",
             WebkitUserSelect: "none",
           }}
         >
