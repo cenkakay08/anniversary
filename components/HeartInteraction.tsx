@@ -1,0 +1,44 @@
+import React, { memo } from "react";
+import Image from "next/image";
+import {
+  Spring,
+  SpringElement,
+  SpringProvider,
+  useSpring,
+} from "@/components/animate-ui/primitives/animate/spring";
+import FollowingEyes from "@/components/FollowingEyes";
+import heartImg from "@/public/heart.svg";
+
+// useSpring'i kullanan wrapper component - sadece bu re-render olur
+const ConnectedFollowingEyes = memo(() => {
+  const { springX, springY } = useSpring();
+  // springX ve springY MotionValue olduğu için referansları değişmez,
+  // ancak context value değiştiğinde bu component re-render olabilir.
+  // FollowingEyes zaten memo'lu olduğu için prop değişmediği sürece re-render olmaz.
+  return <FollowingEyes springX={springX} springY={springY} />;
+});
+
+ConnectedFollowingEyes.displayName = "ConnectedFollowingEyes";
+
+const HeartInteraction = memo(() => {
+  return (
+    <SpringProvider>
+      <ConnectedFollowingEyes />
+      <Spring className="text-gray-400" />
+      <SpringElement className="z-1 cursor-grab active:cursor-grabbing">
+        <Image
+          src={heartImg}
+          alt="Heart"
+          width={48}
+          height={40}
+          draggable={false}
+          priority
+        />
+      </SpringElement>
+    </SpringProvider>
+  );
+});
+
+HeartInteraction.displayName = "HeartInteraction";
+
+export default HeartInteraction;
