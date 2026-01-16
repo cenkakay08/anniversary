@@ -35,6 +35,7 @@ export type ItemDef = {
   y: number;
   sizeX: number;
   sizeY: number;
+  thumbSrc?: string;
 };
 
 const DEFAULT_IMAGES: ImageItem[] = [
@@ -230,10 +231,23 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
   }
 
   const normalizedImages = pool.map((image) => {
+    let src = "";
+    let alt = "";
+
     if (typeof image === "string") {
-      return { src: image, alt: "" };
+      src = image;
+    } else {
+      src = image.src || "";
+      alt = image.alt || "";
     }
-    return { src: image.src || "", alt: image.alt || "" };
+
+    let thumbSrc = src;
+    // Eğer yerel bir dosya ise thumbnail yolunu oluştur
+    if (src.startsWith("/") && !src.startsWith("//")) {
+      thumbSrc = `/thumbnails${src}`;
+    }
+
+    return { src, thumbSrc, alt };
   });
 
   const usedImages = Array.from(
@@ -257,6 +271,7 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
   return coords.map((c, i) => ({
     ...c,
     src: usedImages[i].src,
+    thumbSrc: usedImages[i].thumbSrc,
     alt: usedImages[i].alt,
   }));
 }
