@@ -1,12 +1,18 @@
 import { memo } from "react";
 import TimeDisplay from "./TimeDisplay";
+import NeonText from "./NeonText";
+
 const Duration = memo(() => {
   return (
     <div className="flex shrink-0 flex-col items-center gap-4 px-4 md:gap-8">
       <div className="flex flex-col items-center gap-2">
-        <h2 className="text-xl font-medium tracking-[0.2em] text-white/60 uppercase md:text-3xl">
-          Together For...
-        </h2>
+        <NeonText
+          text="Together For..."
+          strokeColor="color-mix(in oklab, var(--color-white) 60%, transparent)"
+          fontSize="clamp(24px, 4vw, 36px)"
+          animationDuration={3}
+          strokeWidth={1.5}
+        />
         <div className="h-px w-24 bg-linear-to-r from-transparent via-white/20 to-transparent" />
       </div>
 

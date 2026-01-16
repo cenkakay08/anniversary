@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LED/Neon Line Drawing Animation Demo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        background: #0a0a0a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: "Segoe UI", sans-serif;
+        color: #fff;
+        padding: 2rem;
+      }
+
+      h1 {
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        color: #666;
+      }
+
+      h2 {
+        margin: 2rem 0 1rem;
+        font-size: 1.2rem;
+        color: #888;
+      }
+
+      .demo-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3rem;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      .demo-box {
+        text-align: center;
+      }
+
+      .demo-box p {
+        margin-top: 1rem;
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      /* ================================================
+       NEON GLOW FILTER - Creates the LED/Neon effect
+       ================================================ */
+      .neon-glow {
+        filter: url(#neon-filter);
+      }
+
+      /* ================================================
+       LINE DRAWING ANIMATION
+       This is the key technique:
+       - stroke-dasharray: Sets the dash pattern (total path length)
+       - stroke-dashoffset: Offset of the dash pattern
+       - Animation: Moves offset from full length to 0
+       ================================================ */
+
+      /* Heart animation */
+      .heart-path {
+        fill: none;
+        stroke: #ff0066;
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        /* Path length is approximately 320 */
+        stroke-dasharray: 320;
+        stroke-dashoffset: 320;
+        animation: drawLine 2s ease-in-out forwards infinite;
+      }
+
+      /* Star animation */
+      .star-path {
+        fill: none;
+        stroke: #00ffff;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 500;
+        stroke-dashoffset: 500;
+        animation: drawLine 2.5s ease-in-out forwards infinite;
+      }
+
+      /* Text animation */
+      .text-path {
+        fill: none;
+        stroke: #00ff88;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        animation: drawLine 3s ease-in-out forwards infinite;
+      }
+
+      /* Circle animation */
+      .circle-path {
+        fill: none;
+        stroke: #ff00ff;
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-dasharray: 314; /* circumference = 2 * PI * r = 2 * 3.14 * 50 */
+        stroke-dashoffset: 314;
+        animation: drawLine 1.5s ease-in-out forwards infinite;
+      }
+
+      /* Spiral animation */
+      .spiral-path {
+        fill: none;
+        stroke: #ffaa00;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-dasharray: 800;
+        stroke-dashoffset: 800;
+        animation: drawLine 3s ease-in-out forwards infinite;
+      }
+
+      /* ================================================
+       THE KEY ANIMATION - Line Drawing Effect
+       Goes from full offset (invisible) to 0 (fully drawn)
+       ================================================ */
+      @keyframes drawLine {
+        0% {
+          stroke-dashoffset: var(--path-length, 320);
+          opacity: 0.8;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          stroke-dashoffset: 0;
+          opacity: 0.8;
+        }
+      }
+
+      /* Glow pulse animation for extra neon effect */
+      @keyframes glowPulse {
+        0%,
+        100% {
+          filter: brightness(1) drop-shadow(0 0 8px currentColor);
+        }
+        50% {
+          filter: brightness(1.3) drop-shadow(0 0 15px currentColor);
+        }
+      }
+
+      .glow-pulse {
+        animation: glowPulse 2s ease-in-out infinite;
+      }
+
+      /* Info section */
+      .info {
+        max-width: 600px;
+        margin-top: 3rem;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .info h3 {
+        color: #00ffff;
+        margin-bottom: 1rem;
+      }
+
+      .info code {
+        background: rgba(0, 255, 255, 0.1);
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        color: #00ffff;
+      }
+
+      .info pre {
+        background: #1a1a1a;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 1rem 0;
+        font-size: 0.8rem;
+        line-height: 1.6;
+      }
+
+      .info ul {
+        margin-left: 1.5rem;
+        line-height: 1.8;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔌 LED / Neon Line Drawing Animation</h1>
+
+    <!-- SVG Filter for Neon Glow -->
+    <svg width="0" height="0">
+      <defs>
+        <filter id="neon-filter" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur1" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur2" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur3" />
+          <feMerge>
+            <feMergeNode in="blur3" />
+            <feMergeNode in="blur2" />
+            <feMergeNode in="blur1" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
+
+    <div class="demo-container">
+      <!-- Heart Demo -->
+      <div class="demo-box">
+        <svg width="120" height="120" viewBox="0 0 100 100" class="neon-glow">
+          <path
+            class="heart-path"
+            style="--path-length: 320"
+            d="M50 88 C20 60, 10 40, 25 25 C35 15, 50 20, 50 35 C50 20, 65 15, 75 25 C90 40, 80 60, 50 88 Z"
+          />
+        </svg>
+        <p>Heart - 2s loop</p>
+      </div>
+
+      <!-- Star Demo -->
+      <div class="demo-box">
+        <svg width="120" height="120" viewBox="0 0 100 100" class="neon-glow">
+          <path
+            class="star-path"
+            style="--path-length: 500"
+            d="M50 5 L61 40 L98 40 L68 62 L79 97 L50 75 L21 97 L32 62 L2 40 L39 40 Z"
+          />
+        </svg>
+        <p>Star - 2.5s loop</p>
+      </div>
+
+      <!-- Circle Demo -->
+      <div class="demo-box">
+        <svg width="120" height="120" viewBox="0 0 100 100" class="neon-glow">
+          <circle
+            class="circle-path"
+            cx="50"
+            cy="50"
+            r="40"
+            style="--path-length: 314"
+          />
+        </svg>
+        <p>Circle - 1.5s loop</p>
+      </div>
+
+      <!-- Spiral Demo -->
+      <div class="demo-box">
+        <svg width="120" height="120" viewBox="0 0 100 100" class="neon-glow">
+          <path
+            class="spiral-path"
+            style="--path-length: 800"
+            d="M50 50 
+             Q60 50, 60 40 
+             Q60 25, 45 25 
+             Q20 25, 20 50 
+             Q20 80, 50 80 
+             Q90 80, 90 45 
+             Q90 10, 50 10"
+          />
+        </svg>
+        <p>Spiral - 3s loop</p>
+      </div>
+    </div>
+
+    <h2>Text Example</h2>
+
+    <svg width="300" height="80" viewBox="0 0 300 80" class="neon-glow">
+      <!-- "LED" text as paths -->
+      <g
+        class="text-path"
+        style="--path-length: 1000"
+        transform="translate(20, 60)"
+      >
+        <!-- L -->
+        <path d="M0 0 L0 -50 M0 0 L25 0" />
+        <!-- E -->
+        <path d="M45 0 L45 -50 M45 0 L70 0 M45 -25 L65 -25 M45 -50 L70 -50" />
+        <!-- D -->
+        <path d="M90 0 L90 -50 M90 0 Q130 0, 130 -25 Q130 -50, 90 -50" />
+      </g>
+    </svg>
+
+    <div class="info">
+      <h3>🎯 Nasıl Çalışıyor?</h3>
+      <p>
+        Animasyon <code>stroke-dasharray</code> ve
+        <code>stroke-dashoffset</code> CSS özelliklerini kullanıyor:
+      </p>
+
+      <pre>
+/* 1. Çizginin toplam uzunluğunu dash pattern olarak ayarla */
+stroke-dasharray: 320;  /* path uzunluğu */
+
+/* 2. Offset'i aynı değere ayarla (çizgi görünmez) */
+stroke-dashoffset: 320;
+
+/* 3. Offset'i 0'a animasyonla (çizgi çizilir) */
+@keyframes drawLine {
+  from { stroke-dashoffset: 320; }  /* Görünmez */
+  to   { stroke-dashoffset: 0; }    /* Tam çizilmiş */
+}</pre
+      >
+
+      <h3 style="margin-top: 1.5rem">✨ Neon Glow Efekti</h3>
+      <p>
+        SVG <code>&lt;filter&gt;</code> kullanarak blur katmanları
+        oluşturuyoruz:
+      </p>
+      <ul>
+        <li>
+          <strong>Outer glow:</strong> Büyük blur (15px) - yumuşak dış ışık
+        </li>
+        <li><strong>Middle glow:</strong> Orta blur (8px) - parlaklık</li>
+        <li><strong>Inner glow:</strong> Küçük blur (3px) - keskin çekirdek</li>
+        <li><strong>Original:</strong> Orijinal çizgi üstte</li>
+      </ul>
+    </div>
+  </body>
+</html>

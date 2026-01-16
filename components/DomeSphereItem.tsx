@@ -84,7 +84,7 @@ const DomeSphereItem = ({
         style={imageContainerStyle}
       >
         <Image
-          src={it.src}
+          src={it.thumbSrc || it.src}
           alt={it.alt || ""}
           fill
           sizes="(max-width: 768px) 150px, 300px"
