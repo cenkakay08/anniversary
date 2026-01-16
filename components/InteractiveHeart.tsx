@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import Image from "next/image";
-import loversImg from "@/public/lovers.svg";
+import loversImg from "@/public/svgs/lovers.svg";
 import HeartInteraction from "./HeartInteraction";
 
 // İç bileşen artık useSpring hook'unu doğrudan kullanmıyor

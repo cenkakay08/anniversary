@@ -104,7 +104,38 @@
       display: none;
     }
   }
+
+  /* Neon animation variables - actual keyframes moved outside @theme */
+  --animate-neon-draw: neonDrawLine 2.5s ease-in-out forwards infinite;
+  --animate-neon-pulse: neonPulse 2s ease-in-out infinite;
 }
+
+/* Neon Line Drawing Animation - Global scope for inline styles */
+@keyframes neonDrawLine {
+  0% {
+    stroke-dashoffset: var(--path-length, 500);
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.9;
+  }
+}
+
+/* Neon Glow Pulse - Global scope for inline styles */
+@keyframes neonPulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
