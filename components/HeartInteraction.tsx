@@ -7,7 +7,7 @@ import {
   useSpring,
 } from "@/components/animate-ui/primitives/animate/spring";
 import FollowingEyes from "@/components/FollowingEyes";
-import heartImg from "@/public/heart.svg";
+import heartImg from "@/public/svgs/heart-pixel.svg";
 
 // useSpring'i kullanan wrapper component - sadece bu re-render olur
 const ConnectedFollowingEyes = memo(() => {
