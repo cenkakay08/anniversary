@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { useGesture } from "@use-gesture/react";
+import DomeSphere from "./DomeSphere";
+import DomeViewer from "./DomeViewer";
 
 type ImageItem = string | { src: string; alt?: string };
 
@@ -25,7 +28,7 @@ type DomeGalleryProps = {
   grayscale?: boolean;
 };
 
-type ItemDef = {
+export type ItemDef = {
   src: string;
   alt: string;
   x: number;
@@ -94,6 +97,104 @@ const DEFAULTS = {
   enlargeTransitionMs: 300,
   segments: 35,
 };
+
+const cssStyles = `
+    .sphere-root {
+      --radius: 520px;
+      --viewer-pad: 72px;
+      --circ: calc(var(--radius) * 3.14);
+      --rot-y: calc((360deg / var(--segments-x)) / 2);
+      --rot-x: calc((360deg / var(--segments-y)) / 2);
+      --item-width: calc(var(--circ) / var(--segments-x));
+      --item-height: calc(var(--circ) / var(--segments-y));
+    }
+    
+    .sphere-root * { 
+      box-sizing: border-box;
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+    }
+    
+    .sphere-root img {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+      pointer-events: none;
+    }
+    
+    .sphere, .sphere-item, .item__image { transform-style: preserve-3d; }
+    
+    .stage {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      perspective: calc(var(--radius) * 2);
+      perspective-origin: 50% 50%;
+    }
+    
+    .sphere {
+      transform: translateZ(calc(var(--radius) * -1));
+      will-change: transform;
+      position: absolute;
+    }
+    
+    .sphere-item {
+      width: calc(var(--item-width) * var(--item-size-x));
+      height: calc(var(--item-height) * var(--item-size-y));
+      position: absolute;
+      top: -999px;
+      bottom: -999px;
+      left: -999px;
+      right: -999px;
+      margin: auto;
+      transform-origin: 50% 50%;
+      backface-visibility: hidden;
+      transition: transform 300ms;
+      transform: rotateY(calc(var(--rot-y) * (var(--offset-x) + ((var(--item-size-x) - 1) / 2)) + var(--rot-y-delta, 0deg))) 
+                 rotateX(calc(var(--rot-x) * (var(--offset-y) - ((var(--item-size-y) - 1) / 2)) + var(--rot-x-delta, 0deg))) 
+                 translateZ(var(--radius));
+    }
+    
+    .sphere-root[data-enlarging="true"] .scrim {
+      opacity: 1 !important;
+      pointer-events: all !important;
+    }
+    
+    @media (max-aspect-ratio: 1/1) {
+      .viewer-frame {
+        height: auto !important;
+        width: 100% !important;
+      }
+    }
+    
+    .item__image {
+      position: absolute;
+      inset: 10px;
+      border-radius: var(--tile-radius, 12px);
+      overflow: hidden;
+      cursor: pointer;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transition: transform 300ms;
+      pointer-events: auto;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+    .item__image--reference {
+      position: absolute;
+      inset: 10px;
+      pointer-events: none;
+    }
+  `;
 
 const clamp = (v: number, min: number, max: number) =>
   Math.min(Math.max(v, min), max);
@@ -194,9 +295,6 @@ export default function DomeGallery({
   grayscale = true,
 }: DomeGalleryProps) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -552,21 +650,6 @@ export default function DomeGallery({
     }
 
     const currentRect = overlay.getBoundingClientRect();
-    const rootRect = rootRef.current!.getBoundingClientRect();
-
-    const originalPosRelativeToRoot = {
-      left: originalPos.left - rootRect.left,
-      top: originalPos.top - rootRect.top,
-      width: originalPos.width,
-      height: originalPos.height,
-    };
-
-    const overlayRelativeToRoot = {
-      left: currentRect.left - rootRect.left,
-      top: currentRect.top - rootRect.top,
-      width: currentRect.width,
-      height: currentRect.height,
-    };
 
     const animatingOverlay = document.createElement("div");
     animatingOverlay.className = "enlarge-closing";
@@ -649,6 +732,8 @@ export default function DomeGallery({
     animatingOverlay.addEventListener("transitionend", cleanup, {
       once: true,
     });
+
+    setMounted(false);
   }, [enlargeTransitionMs, openedImageBorderRadius, grayscale]);
 
   useEffect(() => {
@@ -659,7 +744,8 @@ export default function DomeGallery({
     return () => window.removeEventListener("keydown", onKey);
   }, [close]);
 
-  const openItemFromElement = (el: HTMLElement) => {
+  const openItemFromElement = useCallback((el: HTMLElement) => {
+    setMounted(true);
     if (openingRef.current) return;
     openingRef.current = true;
     openStartedAtRef.current = performance.now();
@@ -784,105 +870,60 @@ export default function DomeGallery({
       };
       overlay.addEventListener("transitionend", onFirstEnd);
     }
-  };
+  }, []);
 
-  const cssStyles = `
-    .sphere-root {
-      --radius: 520px;
-      --viewer-pad: 72px;
-      --circ: calc(var(--radius) * 3.14);
-      --rot-y: calc((360deg / var(--segments-x)) / 2);
-      --rot-x: calc((360deg / var(--segments-y)) / 2);
-      --item-width: calc(var(--circ) / var(--segments-x));
-      --item-height: calc(var(--circ) / var(--segments-y));
-    }
-    
-    .sphere-root * { 
-      box-sizing: border-box;
-      -webkit-user-drag: none;
-      -khtml-user-drag: none;
-      -moz-user-drag: none;
-      -o-user-drag: none;
-      user-drag: none;
-    }
-    
-    .sphere-root img {
-      -webkit-user-drag: none;
-      -khtml-user-drag: none;
-      -moz-user-drag: none;
-      -o-user-drag: none;
-      user-drag: none;
-      pointer-events: none;
-    }
-    
-    .sphere, .sphere-item, .item__image { transform-style: preserve-3d; }
-    
-    .stage {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-      position: absolute;
-      inset: 0;
-      margin: auto;
-      perspective: calc(var(--radius) * 2);
-      perspective-origin: 50% 50%;
-    }
-    
-    .sphere {
-      transform: translateZ(calc(var(--radius) * -1));
-      will-change: transform;
-      position: absolute;
-    }
-    
-    .sphere-item {
-      width: calc(var(--item-width) * var(--item-size-x));
-      height: calc(var(--item-height) * var(--item-size-y));
-      position: absolute;
-      top: -999px;
-      bottom: -999px;
-      left: -999px;
-      right: -999px;
-      margin: auto;
-      transform-origin: 50% 50%;
-      backface-visibility: hidden;
-      transition: transform 300ms;
-      transform: rotateY(calc(var(--rot-y) * (var(--offset-x) + ((var(--item-size-x) - 1) / 2)) + var(--rot-y-delta, 0deg))) 
-                 rotateX(calc(var(--rot-x) * (var(--offset-y) - ((var(--item-size-y) - 1) / 2)) + var(--rot-x-delta, 0deg))) 
-                 translateZ(var(--radius));
-    }
-    
-    .sphere-root[data-enlarging="true"] .scrim {
-      opacity: 1 !important;
-      pointer-events: all !important;
-    }
-    
-    @media (max-aspect-ratio: 1/1) {
-      .viewer-frame {
-        height: auto !important;
-        width: 100% !important;
-      }
-    }
-    
-    .item__image {
-      position: absolute;
-      inset: 10px;
-      border-radius: var(--tile-radius, 12px);
-      overflow: hidden;
-      cursor: pointer;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transition: transform 300ms;
-      pointer-events: auto;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-    }
-    .item__image--reference {
-      position: absolute;
-      inset: 10px;
-      pointer-events: none;
-    }
-  `;
+  const sphereRootStyle = useMemo<React.CSSProperties>(
+    () => ({
+      ["--segments-x" as any]: segments,
+      ["--segments-y" as any]: segments,
+      ["--overlay-blur-color" as any]: overlayBlurColor,
+      ["--tile-radius" as any]: imageBorderRadius,
+      ["--enlarge-radius" as any]: openedImageBorderRadius,
+      ["--image-filter" as any]: grayscale ? "grayscale(1)" : "none",
+    }),
+    [
+      segments,
+      overlayBlurColor,
+      imageBorderRadius,
+      openedImageBorderRadius,
+      grayscale,
+    ],
+  );
+
+  const mainStyle = useMemo<React.CSSProperties>(
+    () => ({
+      touchAction: "pan-y",
+      WebkitUserSelect: "none",
+    }),
+    [],
+  );
+
+  const viewerContainerStyle = useMemo<React.CSSProperties>(
+    () =>
+      ({
+        padding: "var(--viewer-pad)",
+        "--enlarge-radius": openedImageBorderRadius,
+        "--viewer-pad":
+          rootRef.current?.style.getPropertyValue("--viewer-pad") || "72px",
+      }) as React.CSSProperties,
+    [openedImageBorderRadius],
+  );
+
+  const scrimStyle = useMemo<React.CSSProperties>(
+    () => ({
+      background: "rgba(0, 0, 0, 0.4)",
+      backdropFilter: "blur(3px)",
+      pointerEvents: "none",
+    }),
+    [],
+  );
+
+  const viewerFrameStyle = useMemo<React.CSSProperties>(
+    () => ({
+      borderRadius: `var(--enlarge-radius, ${openedImageBorderRadius})`,
+    }),
+    [openedImageBorderRadius],
+  );
 
   return (
     <>
@@ -890,133 +931,39 @@ export default function DomeGallery({
       <div
         ref={rootRef}
         className="sphere-root relative h-full w-full"
-        style={
-          {
-            ["--segments-x" as any]: segments,
-            ["--segments-y" as any]: segments,
-            ["--overlay-blur-color" as any]: overlayBlurColor,
-            ["--tile-radius" as any]: imageBorderRadius,
-            ["--enlarge-radius" as any]: openedImageBorderRadius,
-            ["--image-filter" as any]: grayscale ? "grayscale(1)" : "none",
-          } as React.CSSProperties
-        }
+        style={sphereRootStyle}
       >
         <main
           ref={mainRef}
           className="absolute inset-0 grid place-items-center overflow-hidden bg-transparent select-none"
-          style={{
-            touchAction: "pan-y",
-            WebkitUserSelect: "none",
-          }}
+          style={mainStyle}
         >
           <div className="stage">
-            <div ref={sphereRef} className="sphere">
-              {items.map((it, i) => (
-                <div
-                  key={`${it.x},${it.y},${i}`}
-                  className="sphere-item absolute m-auto"
-                  data-src={it.src}
-                  data-alt={it.alt}
-                  data-offset-x={it.x}
-                  data-offset-y={it.y}
-                  data-size-x={it.sizeX}
-                  data-size-y={it.sizeY}
-                  style={
-                    {
-                      ["--offset-x" as any]: it.x,
-                      ["--offset-y" as any]: it.y,
-                      ["--item-size-x" as any]: it.sizeX,
-                      ["--item-size-y" as any]: it.sizeY,
-                      top: "-999px",
-                      bottom: "-999px",
-                      left: "-999px",
-                      right: "-999px",
-                    } as React.CSSProperties
-                  }
-                >
-                  <div
-                    className="item__image absolute block cursor-pointer overflow-hidden backdrop-blur-md transition-transform duration-300"
-                    role="button"
-                    tabIndex={0}
-                    aria-label={it.alt || "Open image"}
-                    onClick={(e) => {
-                      if (draggingRef.current) return;
-                      if (movedRef.current) return;
-                      if (performance.now() - lastDragEndAt.current < 80)
-                        return;
-                      if (openingRef.current) return;
-                      openItemFromElement(e.currentTarget as HTMLElement);
-                    }}
-                    onPointerUp={(e) => {
-                      if (
-                        (e.nativeEvent as PointerEvent).pointerType !== "touch"
-                      )
-                        return;
-                      if (draggingRef.current) return;
-                      if (movedRef.current) return;
-                      if (performance.now() - lastDragEndAt.current < 80)
-                        return;
-                      if (openingRef.current) return;
-                      openItemFromElement(e.currentTarget as HTMLElement);
-                    }}
-                    style={{
-                      inset: "10px",
-                      borderRadius: `var(--tile-radius, ${imageBorderRadius})`,
-                      backfaceVisibility: "hidden",
-                    }}
-                  >
-                    <img
-                      src={it.src}
-                      draggable={false}
-                      alt={it.alt}
-                      className="pointer-events-none h-full w-full object-cover"
-                      style={{
-                        backfaceVisibility: "hidden",
-                        filter: `var(--image-filter, ${grayscale ? "grayscale(1)" : "none"})`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+            <DomeSphere
+              ref={sphereRef}
+              items={items}
+              draggingRef={draggingRef}
+              movedRef={movedRef}
+              lastDragEndAtRef={lastDragEndAt}
+              openingRef={openingRef}
+              onOpenItem={openItemFromElement}
+              imageBorderRadius={imageBorderRadius}
+              grayscale={grayscale}
+            />
           </div>
         </main>
 
-        {mounted &&
-          createPortal(
-            <div
-              ref={viewerRef}
-              className="pointer-events-none fixed inset-0 z-9999 flex transform-gpu items-center justify-center"
-              style={
-                {
-                  padding: "var(--viewer-pad)",
-                  "--enlarge-radius": openedImageBorderRadius,
-                  "--viewer-pad":
-                    rootRef.current?.style.getPropertyValue("--viewer-pad") ||
-                    "72px",
-                } as React.CSSProperties
-              }
-            >
-              <div
-                ref={scrimRef}
-                onClick={close}
-                className="scrim absolute inset-0 z-10 opacity-0 transition-opacity duration-500"
-                style={{
-                  background: "rgba(0, 0, 0, 0.4)",
-                  backdropFilter: "blur(3px)",
-                  pointerEvents: "none",
-                }}
-              />
-              <div
-                ref={frameRef}
-                className="viewer-frame pointer-events-none relative flex aspect-square h-full max-w-full"
-                style={{
-                  borderRadius: `var(--enlarge-radius, ${openedImageBorderRadius})`,
-                }}
-              />
-            </div>,
-            document.body,
-          )}
+        {mounted && (
+          <DomeViewer
+            viewerRef={viewerRef}
+            scrimRef={scrimRef}
+            frameRef={frameRef}
+            onClose={close}
+            viewerContainerStyle={viewerContainerStyle}
+            scrimStyle={scrimStyle}
+            viewerFrameStyle={viewerFrameStyle}
+          />
+        )}
       </div>
     </>
   );
