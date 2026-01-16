@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   motion,
   useMotionValue,
+  useTransform,
   useSpring as useMotionSpring,
   type SpringOptions,
   type HTMLMotionProps,
@@ -99,7 +100,8 @@ type SpringContextType = {
   y: MotionValue<number>;
   isDragging: boolean;
   setIsDragging: (isDragging: boolean) => void;
-  path: string;
+  pathConfig: SpringPathConfig;
+  center: { x: number; y: number };
 };
 
 const [LocalSpringProvider, useSpring] =
@@ -124,8 +126,9 @@ function SpringProvider({
   const springX = useMotionSpring(x, transition);
   const springY = useMotionSpring(y, transition);
 
-  const sx = useMotionValueState(springX);
-  const sy = useMotionValueState(springY);
+  // React state based recalculation removed for performance
+  // const sx = useMotionValueState(springX);
+  // const sy = useMotionValueState(springY);
 
   const childRef = React.useRef<HTMLDivElement>(null);
 
@@ -169,13 +172,7 @@ function SpringProvider({
     }
   }, [isDragging]);
 
-  const path = generateSpringPath(
-    center.x,
-    center.y,
-    center.x + sx,
-    center.y + sy,
-    pathConfig,
-  );
+  // Removed path calculation from here to prevent re-renders
 
   return (
     <LocalSpringProvider
@@ -188,7 +185,8 @@ function SpringProvider({
         setIsDragging,
         dragElastic,
         childRef,
-        path,
+        pathConfig, // Passed config directly
+        center, // Passed calculated center
       }}
       {...props}
     />
@@ -198,7 +196,19 @@ function SpringProvider({
 type SpringProps = React.SVGProps<SVGSVGElement>;
 
 function Spring({ style, ...props }: SpringProps) {
-  const { path } = useSpring();
+  const { springX, springY, center, pathConfig } = useSpring();
+
+  // Create a transformed motion value that calculates the path string on every frame update
+  // without triggering a React render
+  const d = useTransform([springX, springY], ([currentX, currentY]) => {
+    return generateSpringPath(
+      center.x,
+      center.y,
+      center.x + (currentX as number),
+      center.y + (currentY as number),
+      pathConfig,
+    );
+  });
 
   return (
     <svg
@@ -212,8 +222,8 @@ function Spring({ style, ...props }: SpringProps) {
       }}
       {...props}
     >
-      <path
-        d={path}
+      <motion.path
+        d={d}
         strokeLinecap="round"
         strokeLinejoin="round"
         stroke="currentColor"

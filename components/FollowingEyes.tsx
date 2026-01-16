@@ -26,30 +26,30 @@ const EYE_CENTERS = {
   rightPersonRight: { x: 13.9, y: 1.6 },
 } as const;
 
+// Yardımcı hesaplama fonksiyonu
+const calculatePupilPos = (
+  val: number,
+  personOffset: number,
+  eyeCenter: number,
+) => {
+  // 1. Normalize ve Scale (baseX/Y)
+  // Input [-100, 0, 100] -> Output [-0.35, 0, 0.35]
+  // Lineer interpolasyon: (val - -100) * (0.35 - -0.35) / (100 - -100) + -0.35
+  // Basitleştirilmiş: val * (0.35 / 100)
+  const base = val * (MAX_PUPIL_OFFSET / NORMALIZE_RANGE);
+
+  // 2. Person Offset ve Clamp
+  const clamped = clamp(
+    base + personOffset,
+    -MAX_PUPIL_OFFSET,
+    MAX_PUPIL_OFFSET,
+  );
+
+  // 3. Final Pozisyon
+  return eyeCenter - PUPIL_SIZE / 2 + clamped;
+};
+
 const FollowingEyes = memo(({ springX, springY }: FollowingEyesProps) => {
-  // Yardımcı hesaplama fonksiyonu
-  const calculatePupilPos = (
-    val: number,
-    personOffset: number,
-    eyeCenter: number,
-  ) => {
-    // 1. Normalize ve Scale (baseX/Y)
-    // Input [-100, 0, 100] -> Output [-0.35, 0, 0.35]
-    // Lineer interpolasyon: (val - -100) * (0.35 - -0.35) / (100 - -100) + -0.35
-    // Basitleştirilmiş: val * (0.35 / 100)
-    const base = val * (MAX_PUPIL_OFFSET / NORMALIZE_RANGE);
-
-    // 2. Person Offset ve Clamp
-    const clamped = clamp(
-      base + personOffset,
-      -MAX_PUPIL_OFFSET,
-      MAX_PUPIL_OFFSET,
-    );
-
-    // 3. Final Pozisyon
-    return eyeCenter - PUPIL_SIZE / 2 + clamped;
-  };
-
   // Sol Kişi (offset: 0.2)
   const leftLeftX = useTransform(springX, (v) =>
     calculatePupilPos(v, LEFT_PERSON_X_OFFSET, EYE_CENTERS.leftPersonLeft.x),
@@ -80,13 +80,18 @@ const FollowingEyes = memo(({ springX, springY }: FollowingEyesProps) => {
     calculatePupilPos(v, INITIAL_Y_OFFSET, EYE_CENTERS.rightPersonRight.y),
   );
 
+  const svgStyle = useMemo<React.CSSProperties>(
+    () => ({ shapeRendering: "crispEdges" }),
+    [],
+  );
+
   return (
     <svg
       width="150"
       height="80"
       viewBox="0 0 15 8"
       className="pointer-events-none absolute inset-0 h-full w-full"
-      style={{ shapeRendering: "crispEdges" }}
+      style={svgStyle}
     >
       {/* Sol kişinin göz bebekleri */}
       <motion.rect
