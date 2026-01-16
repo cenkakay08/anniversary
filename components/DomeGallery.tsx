@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useGesture } from "@use-gesture/react";
+import DomeSphere from "./DomeSphere";
+import DomeViewer from "./DomeViewer";
 
 type ImageItem = string | { src: string; alt?: string };
 
@@ -26,7 +28,7 @@ type DomeGalleryProps = {
   grayscale?: boolean;
 };
 
-type ItemDef = {
+export type ItemDef = {
   src: string;
   alt: string;
   x: number;
@@ -293,9 +295,6 @@ export default function DomeGallery({
   grayscale = true,
 }: DomeGalleryProps) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -651,21 +650,6 @@ export default function DomeGallery({
     }
 
     const currentRect = overlay.getBoundingClientRect();
-    const rootRect = rootRef.current!.getBoundingClientRect();
-
-    const originalPosRelativeToRoot = {
-      left: originalPos.left - rootRect.left,
-      top: originalPos.top - rootRect.top,
-      width: originalPos.width,
-      height: originalPos.height,
-    };
-
-    const overlayRelativeToRoot = {
-      left: currentRect.left - rootRect.left,
-      top: currentRect.top - rootRect.top,
-      width: currentRect.width,
-      height: currentRect.height,
-    };
 
     const animatingOverlay = document.createElement("div");
     animatingOverlay.className = "enlarge-closing";
@@ -748,6 +732,8 @@ export default function DomeGallery({
     animatingOverlay.addEventListener("transitionend", cleanup, {
       once: true,
     });
+
+    setMounted(false);
   }, [enlargeTransitionMs, openedImageBorderRadius, grayscale]);
 
   useEffect(() => {
@@ -759,6 +745,7 @@ export default function DomeGallery({
   }, [close]);
 
   const openItemFromElement = useCallback((el: HTMLElement) => {
+    setMounted(true);
     if (openingRef.current) return;
     openingRef.current = true;
     openStartedAtRef.current = performance.now();
@@ -885,140 +872,98 @@ export default function DomeGallery({
     }
   }, []);
 
+  const sphereRootStyle = useMemo<React.CSSProperties>(
+    () => ({
+      ["--segments-x" as any]: segments,
+      ["--segments-y" as any]: segments,
+      ["--overlay-blur-color" as any]: overlayBlurColor,
+      ["--tile-radius" as any]: imageBorderRadius,
+      ["--enlarge-radius" as any]: openedImageBorderRadius,
+      ["--image-filter" as any]: grayscale ? "grayscale(1)" : "none",
+    }),
+    [
+      segments,
+      overlayBlurColor,
+      imageBorderRadius,
+      openedImageBorderRadius,
+      grayscale,
+    ],
+  );
+
+  const mainStyle = useMemo<React.CSSProperties>(
+    () => ({
+      touchAction: "pan-y",
+      WebkitUserSelect: "none",
+    }),
+    [],
+  );
+
+  const viewerContainerStyle = useMemo<React.CSSProperties>(
+    () =>
+      ({
+        padding: "var(--viewer-pad)",
+        "--enlarge-radius": openedImageBorderRadius,
+        "--viewer-pad":
+          rootRef.current?.style.getPropertyValue("--viewer-pad") || "72px",
+      }) as React.CSSProperties,
+    [openedImageBorderRadius],
+  );
+
+  const scrimStyle = useMemo<React.CSSProperties>(
+    () => ({
+      background: "rgba(0, 0, 0, 0.4)",
+      backdropFilter: "blur(3px)",
+      pointerEvents: "none",
+    }),
+    [],
+  );
+
+  const viewerFrameStyle = useMemo<React.CSSProperties>(
+    () => ({
+      borderRadius: `var(--enlarge-radius, ${openedImageBorderRadius})`,
+    }),
+    [openedImageBorderRadius],
+  );
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: cssStyles }} />
       <div
         ref={rootRef}
         className="sphere-root relative h-full w-full"
-        style={
-          {
-            ["--segments-x" as any]: segments,
-            ["--segments-y" as any]: segments,
-            ["--overlay-blur-color" as any]: overlayBlurColor,
-            ["--tile-radius" as any]: imageBorderRadius,
-            ["--enlarge-radius" as any]: openedImageBorderRadius,
-            ["--image-filter" as any]: grayscale ? "grayscale(1)" : "none",
-          } as React.CSSProperties
-        }
+        style={sphereRootStyle}
       >
         <main
           ref={mainRef}
           className="absolute inset-0 grid place-items-center overflow-hidden bg-transparent select-none"
-          style={{
-            touchAction: "pan-y",
-            WebkitUserSelect: "none",
-          }}
+          style={mainStyle}
         >
           <div className="stage">
-            <div ref={sphereRef} className="sphere">
-              {items.map((it, i) => (
-                <div
-                  key={`${it.x},${it.y},${i}`}
-                  className="sphere-item absolute m-auto"
-                  data-src={it.src}
-                  data-alt={it.alt}
-                  data-offset-x={it.x}
-                  data-offset-y={it.y}
-                  data-size-x={it.sizeX}
-                  data-size-y={it.sizeY}
-                  style={
-                    {
-                      ["--offset-x" as any]: it.x,
-                      ["--offset-y" as any]: it.y,
-                      ["--item-size-x" as any]: it.sizeX,
-                      ["--item-size-y" as any]: it.sizeY,
-                      top: "-999px",
-                      bottom: "-999px",
-                      left: "-999px",
-                      right: "-999px",
-                    } as React.CSSProperties
-                  }
-                >
-                  <div
-                    className="item__image absolute block cursor-pointer overflow-hidden transition-transform duration-300"
-                    role="button"
-                    tabIndex={0}
-                    aria-label={it.alt || "Open image"}
-                    onClick={(e) => {
-                      if (draggingRef.current) return;
-                      if (movedRef.current) return;
-                      if (performance.now() - lastDragEndAt.current < 80)
-                        return;
-                      if (openingRef.current) return;
-                      openItemFromElement(e.currentTarget as HTMLElement);
-                    }}
-                    onPointerUp={(e) => {
-                      if (
-                        (e.nativeEvent as PointerEvent).pointerType !== "touch"
-                      )
-                        return;
-                      if (draggingRef.current) return;
-                      if (movedRef.current) return;
-                      if (performance.now() - lastDragEndAt.current < 80)
-                        return;
-                      if (openingRef.current) return;
-                      openItemFromElement(e.currentTarget as HTMLElement);
-                    }}
-                    style={{
-                      inset: "10px",
-                      borderRadius: `var(--tile-radius, ${imageBorderRadius})`,
-                      backfaceVisibility: "hidden",
-                    }}
-                  >
-                    <Image
-                      src={it.src}
-                      alt={it.alt || ""}
-                      fill
-                      sizes="(max-width: 768px) 150px, 300px"
-                      className="pointer-events-none object-cover"
-                      draggable={false}
-                      style={{
-                        filter: `var(--image-filter, ${grayscale ? "grayscale(1)" : "none"})`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+            <DomeSphere
+              ref={sphereRef}
+              items={items}
+              draggingRef={draggingRef}
+              movedRef={movedRef}
+              lastDragEndAtRef={lastDragEndAt}
+              openingRef={openingRef}
+              onOpenItem={openItemFromElement}
+              imageBorderRadius={imageBorderRadius}
+              grayscale={grayscale}
+            />
           </div>
         </main>
 
-        {mounted &&
-          createPortal(
-            <div
-              ref={viewerRef}
-              className="pointer-events-none fixed inset-0 z-9999 flex transform-gpu items-center justify-center"
-              style={
-                {
-                  padding: "var(--viewer-pad)",
-                  "--enlarge-radius": openedImageBorderRadius,
-                  "--viewer-pad":
-                    rootRef.current?.style.getPropertyValue("--viewer-pad") ||
-                    "72px",
-                } as React.CSSProperties
-              }
-            >
-              <div
-                ref={scrimRef}
-                onClick={close}
-                className="scrim absolute inset-0 z-10 opacity-0 transition-opacity duration-500"
-                style={{
-                  background: "rgba(0, 0, 0, 0.4)",
-                  backdropFilter: "blur(3px)",
-                  pointerEvents: "none",
-                }}
-              />
-              <div
-                ref={frameRef}
-                className="viewer-frame pointer-events-none relative flex aspect-square h-full max-w-full"
-                style={{
-                  borderRadius: `var(--enlarge-radius, ${openedImageBorderRadius})`,
-                }}
-              />
-            </div>,
-            document.body,
-          )}
+        {mounted && (
+          <DomeViewer
+            viewerRef={viewerRef}
+            scrimRef={scrimRef}
+            frameRef={frameRef}
+            onClose={close}
+            viewerContainerStyle={viewerContainerStyle}
+            scrimStyle={scrimStyle}
+            viewerFrameStyle={viewerFrameStyle}
+          />
+        )}
       </div>
     </>
   );
