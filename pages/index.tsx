@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 // Bileşen render sırası ve gecikmeleri (ms)
 const RENDER_DELAYS = {
   duration: 0,
-  interactiveHeart: 200,
-  memoryGallery: 400,
+  interactiveHeart: 1000,
+  memoryGallery: 2000,
 } as const;
 
 export default function Home() {
@@ -71,7 +71,6 @@ export default function Home() {
             {showDuration && <Duration />}
             {showInteractiveHeart && <InteractiveHeart />}
             {showMemoryGallery && <MemoryGallery />}
-            {/* <AnniversaryMenu /> */}
           </>
         )}
       </main>

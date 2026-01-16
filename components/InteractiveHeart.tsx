@@ -1,25 +1,7 @@
 import React, { memo } from "react";
 import Image from "next/image";
-import {
-  Spring,
-  SpringElement,
-  SpringProvider,
-  useSpring,
-} from "@/components/animate-ui/primitives/animate/spring";
 import loversImg from "@/public/lovers.svg";
-import heartImg from "@/public/heart.svg";
-import FollowingEyes from "@/components/FollowingEyes";
-
-// useSpring'i kullanan wrapper component - sadece bu re-render olur
-const ConnectedFollowingEyes = memo(() => {
-  const { springX, springY } = useSpring();
-  // springX ve springY MotionValue olduğu için referansları değişmez,
-  // ancak context value değiştiğinde bu component re-render olabilir.
-  // FollowingEyes zaten memo'lu olduğu için prop değişmediği sürece re-render olmaz.
-  return <FollowingEyes springX={springX} springY={springY} />;
-});
-
-ConnectedFollowingEyes.displayName = "ConnectedFollowingEyes";
+import HeartInteraction from "./HeartInteraction";
 
 // İç bileşen artık useSpring hook'unu doğrudan kullanmıyor
 // Böylece context updates (isDragging vb.) bu bileşeni re-render etmiyor
@@ -34,18 +16,7 @@ const InteractiveHeartContent = memo(() => {
         draggable={false}
         priority
       />
-      <ConnectedFollowingEyes />
-      <Spring className="text-gray-400" />
-      <SpringElement className="z-1 cursor-grab active:cursor-grabbing">
-        <Image
-          src={heartImg}
-          alt="Heart"
-          width={48}
-          height={40}
-          draggable={false}
-          priority
-        />
-      </SpringElement>
+      <HeartInteraction />
     </>
   );
 });
@@ -56,9 +27,7 @@ const InteractiveHeart = memo(() => {
   return (
     <div className="flex w-full shrink-0 flex-col items-center gap-2 overflow-x-clip">
       <div className="relative flex aspect-15/8 w-[180px] flex-col items-center justify-center sm:w-60">
-        <SpringProvider>
-          <InteractiveHeartContent />
-        </SpringProvider>
+        <InteractiveHeartContent />
       </div>
       <p className="text-xs text-white/40 sm:text-sm">Drag the heart! 💕</p>
     </div>
