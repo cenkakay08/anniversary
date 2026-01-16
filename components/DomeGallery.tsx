@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { useGesture } from "@use-gesture/react";
 
 type ImageItem = string | { src: string; alt?: string };
@@ -935,7 +936,7 @@ export default function DomeGallery({
                   }
                 >
                   <div
-                    className="item__image absolute block cursor-pointer overflow-hidden backdrop-blur-md transition-transform duration-300"
+                    className="item__image absolute block cursor-pointer overflow-hidden transition-transform duration-300"
                     role="button"
                     tabIndex={0}
                     aria-label={it.alt || "Open image"}
@@ -965,13 +966,14 @@ export default function DomeGallery({
                       backfaceVisibility: "hidden",
                     }}
                   >
-                    <img
+                    <Image
                       src={it.src}
+                      alt={it.alt || ""}
+                      fill
+                      sizes="(max-width: 768px) 150px, 300px"
+                      className="pointer-events-none object-cover"
                       draggable={false}
-                      alt={it.alt}
-                      className="pointer-events-none h-full w-full object-cover"
                       style={{
-                        backfaceVisibility: "hidden",
                         filter: `var(--image-filter, ${grayscale ? "grayscale(1)" : "none"})`,
                       }}
                     />
