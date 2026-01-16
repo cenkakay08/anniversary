@@ -39,57 +39,70 @@ export type ItemDef = {
 };
 
 const DEFAULT_IMAGES: ImageItem[] = [
-  { src: "/IMG20250629125814.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250629174030.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250629200018.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250630095616.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250630220227.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701153607.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701160323.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701160438.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701160439.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701161222.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701162053.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701163200.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701163329.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701185240.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250701230951.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250702142144.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250702193547.jpg", alt: "Gallery Image" },
-  { src: "/IMG20250705160457.jpg", alt: "Gallery Image" },
-  { src: "/IMG_20250729_000943_294.jpg", alt: "Gallery Image" },
-  { src: "/IMG_20251117_170146_225.webp", alt: "Gallery Image" },
-  { src: "/IMG_20251117_182931_748.webp", alt: "Gallery Image" },
-  { src: "/IMG_20251207_224239_725.webp", alt: "Gallery Image" },
+  { src: "/images/IMG20250629125814.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250629174030.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250629200018.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250630095616.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250630220227.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701153607.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701160323.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701160438.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701160439.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701161222.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701162053.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701163200.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701163329.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701185240.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250701230951.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250702142144.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250702193547.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20250705160457.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251001190130.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251002164003.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251002164232.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251003165742.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251004095215.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251004134144.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251005131034.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251005203940.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251007130658.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251008203307.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251009153030.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251009182534.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG20251010034532.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG_20250729_000943_294.jpg", alt: "Gallery Image" },
+  { src: "/images/IMG_20251117_170146_225.webp", alt: "Gallery Image" },
+  { src: "/images/IMG_20251117_182931_748.webp", alt: "Gallery Image" },
+  { src: "/images/IMG_20251207_224239_725.webp", alt: "Gallery Image" },
   {
-    src: "/Screenshot_2025-05-31-12-08-06-10_1c337646f29875672b5a61192b9010f9.jpg",
+    src: "/images/Screenshot_2025-05-31-12-08-06-10_1c337646f29875672b5a61192b9010f9.jpg",
     alt: "Gallery Image",
   },
   {
-    src: "/Screenshot_2025-07-08-19-42-25-60_1c337646f29875672b5a61192b9010f9.jpg",
+    src: "/images/Screenshot_2025-07-08-19-42-25-60_1c337646f29875672b5a61192b9010f9.jpg",
     alt: "Gallery Image",
   },
-  { src: "/mmexport1748954376801.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1751352933226.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1751438745340.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1751543079225.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1753803034214.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1753803037487.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1753803076148.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1753803316696.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1755010072499.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1756028448627.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1756242249169.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1756242306212.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1756242339968.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1756242354484.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1759479639813.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1759479646225.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1759571279688.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1760105897670.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1760768744942.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1763047108172.jpg", alt: "Gallery Image" },
-  { src: "/mmexport1763828028347.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1748954376801.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1751352933226.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1751438745340.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1751543079225.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1753803034214.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1753803037487.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1753803076148.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1753803316696.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1755010072499.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1756028448627.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1756242249169.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1756242306212.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1756242339968.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1756242354484.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1759479639813.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1759479646225.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1759571279688.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1760105897670.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1760768744942.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1763047108172.jpg", alt: "Gallery Image" },
+  { src: "/images/mmexport1763828028347.jpg", alt: "Gallery Image" },
 ];
 
 const DEFAULTS = {
@@ -244,7 +257,9 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
     let thumbSrc = src;
     // Eğer yerel bir dosya ise thumbnail yolunu oluştur
     if (src.startsWith("/") && !src.startsWith("//")) {
-      thumbSrc = `/thumbnails${src}`;
+      // /images/filename.jpg -> /thumbnails/filename.jpg
+      const filename = src.split("/").pop() || "";
+      thumbSrc = `/thumbnails/${filename}`;
     }
 
     return { src, thumbSrc, alt };
@@ -967,7 +982,6 @@ export default function DomeGallery({
             />
           </div>
         </main>
-
         {mounted && (
           <DomeViewer
             viewerRef={viewerRef}
