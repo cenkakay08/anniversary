@@ -6,6 +6,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 jobs:
   approve-and-merge:
@@ -21,3 +22,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh pr merge ${{ github.event.pull_request.number }} --merge --delete-branch --repo ${{ github.repository }} || gh pr merge ${{ github.event.pull_request.number }} --auto --merge --delete-branch --repo ${{ github.repository }}
+
+      - name: Trigger Deployment
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref master
