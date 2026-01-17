@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import Image from "next/image";
+import CustomImage from "./CustomImage";
 import {
   Spring,
   SpringElement,
@@ -26,7 +26,7 @@ const HeartInteraction = memo(() => {
       <ConnectedFollowingEyes />
       <Spring className="text-gray-400" />
       <SpringElement className="z-1 cursor-grab active:cursor-grabbing">
-        <Image src={heartImg} alt="Heart" width={48} draggable={false} />
+        <CustomImage src={heartImg} alt="Heart" width={48} draggable={false} />
       </SpringElement>
     </SpringProvider>
   );
