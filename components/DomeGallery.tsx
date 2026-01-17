@@ -863,14 +863,6 @@ export default function DomeGallery({
           startPosRef.current = null;
           cancelTapRef.current = !isTap;
 
-          if (isTap && tapTargetRef.current && !focusedElRef.current) {
-            const src = tapTargetRef.current.getAttribute("data-src");
-            if (src) {
-              setSelectedIndex(
-                images.findIndex((img) => img.staticImageData.src === src),
-              );
-            }
-          }
           tapTargetRef.current = null;
 
           if (cancelTapRef.current)

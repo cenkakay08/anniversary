@@ -1,5 +1,5 @@
 import React, { memo, useMemo, useCallback } from "react";
-import Image from "next/image";
+import CustomImage from "./CustomImage";
 import { ItemDef } from "./DomeGallery";
 
 interface DomeSphereItemProps {
@@ -57,13 +57,6 @@ const DomeSphereItem = ({
     [onInteraction],
   );
 
-  const handlePointerUp = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      onInteraction(e, "pointerUp", it);
-    },
-    [onInteraction],
-  );
-
   return (
     <div
       className="sphere-item absolute m-auto"
@@ -81,17 +74,17 @@ const DomeSphereItem = ({
         tabIndex={0}
         aria-label={it.alt || "Open image"}
         onClick={handleClick}
-        onPointerUp={handlePointerUp}
         style={imageContainerStyle}
       >
-        <Image
+        <CustomImage
           src={it.thumbStaticImageData}
           alt={it.alt || ""}
           fill
-          sizes="(max-width: 768px) 150px, 300px"
           className="pointer-events-none object-cover"
           draggable={false}
           style={imageStyle}
+          blurDataURL={it.thumbStaticImageData.blurDataURL}
+          placeholder="blur"
         />
       </div>
     </div>

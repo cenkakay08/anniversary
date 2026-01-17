@@ -35,10 +35,6 @@ const DomeSphere = forwardRef<HTMLDivElement, DomeSphereProps>(
         eventType: "click" | "pointerUp",
         item: ItemDef,
       ) => {
-        if (eventType === "pointerUp") {
-          if ((e.nativeEvent as PointerEvent).pointerType !== "touch") return;
-        }
-
         if (draggingRef.current) return;
         if (movedRef.current) return;
         if (performance.now() - lastDragEndAtRef.current < 80) return;
