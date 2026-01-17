@@ -16,14 +16,17 @@ const CustomImage = React.memo((props: ImageProps) => {
   return (
     <Image
       {...props}
-      style={props.style} // Pass props.style directly
       className={cn(
         props.className,
         !isLoaded &&
           props.blurDataURL &&
-          (props.height && props.width && props.height > props.width
-            ? "h-full min-h-[50px] w-auto"
-            : "h-auto w-full min-w-[50px]"),
+          cn(
+            "h-auto w-full",
+            props.height &&
+              props.width &&
+              props.height >= props.width &&
+              "md:h-full md:w-auto",
+          ),
       )}
       onLoad={onLoadEnchaned}
     />
