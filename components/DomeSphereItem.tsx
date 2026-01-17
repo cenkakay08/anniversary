@@ -9,6 +9,7 @@ interface DomeSphereItemProps {
   onInteraction: (
     e: React.MouseEvent<HTMLDivElement> | React.PointerEvent<HTMLDivElement>,
     eventType: "click" | "pointerUp",
+    item: ItemDef,
   ) => void;
 }
 
@@ -51,14 +52,14 @@ const DomeSphereItem = ({
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      onInteraction(e, "click");
+      onInteraction(e, "click", it);
     },
     [onInteraction],
   );
 
   const handlePointerUp = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      onInteraction(e, "pointerUp");
+      onInteraction(e, "pointerUp", it);
     },
     [onInteraction],
   );
@@ -66,7 +67,6 @@ const DomeSphereItem = ({
   return (
     <div
       className="sphere-item absolute m-auto"
-      data-src={it.src}
       data-alt={it.alt}
       data-offset-x={it.x}
       data-offset-y={it.y}
@@ -76,6 +76,7 @@ const DomeSphereItem = ({
     >
       <div
         className="item__image absolute block cursor-pointer overflow-hidden transition-transform duration-300"
+        data-src={it.staticImageData.src}
         role="button"
         tabIndex={0}
         aria-label={it.alt || "Open image"}
@@ -84,7 +85,7 @@ const DomeSphereItem = ({
         style={imageContainerStyle}
       >
         <Image
-          src={it.thumbSrc || it.src}
+          src={it.thumbStaticImageData}
           alt={it.alt || ""}
           fill
           sizes="(max-width: 768px) 150px, 300px"

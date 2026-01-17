@@ -125,9 +125,9 @@ import thumb57 from "@/public/thumbnails/mmexport1763047108172.jpg";
 import thumb58 from "@/public/thumbnails/mmexport1763828028347.jpg";
 
 type ImageItem = {
-  src: StaticImageData;
-  thumbnailSrc: StaticImageData;
-  alt?: string;
+  staticImageData: StaticImageData;
+  thumbStaticImageData: StaticImageData;
+  alt: string;
 };
 
 type DomeGalleryProps = {
@@ -152,74 +152,270 @@ type DomeGalleryProps = {
 };
 
 export type ItemDef = {
-  src: string;
+  staticImageData: StaticImageData;
   alt: string;
   x: number;
   y: number;
   sizeX: number;
   sizeY: number;
-  thumbSrc: string;
+  thumbStaticImageData: StaticImageData;
 };
 
 const DEFAULT_IMAGES: ImageItem[] = [
-  { src: img1, thumbnailSrc: thumb1, alt: "Gallery Image" },
-  { src: img2, thumbnailSrc: thumb2, alt: "Gallery Image" },
-  { src: img3, thumbnailSrc: thumb3, alt: "Gallery Image" },
-  { src: img4, thumbnailSrc: thumb4, alt: "Gallery Image" },
-  { src: img5, thumbnailSrc: thumb5, alt: "Gallery Image" },
-  { src: img6, thumbnailSrc: thumb6, alt: "Gallery Image" },
-  { src: img7, thumbnailSrc: thumb7, alt: "Gallery Image" },
-  { src: img8, thumbnailSrc: thumb8, alt: "Gallery Image" },
-  { src: img9, thumbnailSrc: thumb9, alt: "Gallery Image" },
-  { src: img10, thumbnailSrc: thumb10, alt: "Gallery Image" },
-  { src: img11, thumbnailSrc: thumb11, alt: "Gallery Image" },
-  { src: img12, thumbnailSrc: thumb12, alt: "Gallery Image" },
-  { src: img13, thumbnailSrc: thumb13, alt: "Gallery Image" },
-  { src: img14, thumbnailSrc: thumb14, alt: "Gallery Image" },
-  { src: img15, thumbnailSrc: thumb15, alt: "Gallery Image" },
-  { src: img16, thumbnailSrc: thumb16, alt: "Gallery Image" },
-  { src: img17, thumbnailSrc: thumb17, alt: "Gallery Image" },
-  { src: img18, thumbnailSrc: thumb18, alt: "Gallery Image" },
-  { src: img19, thumbnailSrc: thumb19, alt: "Gallery Image" },
-  { src: img20, thumbnailSrc: thumb20, alt: "Gallery Image" },
-  { src: img21, thumbnailSrc: thumb21, alt: "Gallery Image" },
-  { src: img22, thumbnailSrc: thumb22, alt: "Gallery Image" },
-  { src: img23, thumbnailSrc: thumb23, alt: "Gallery Image" },
-  { src: img24, thumbnailSrc: thumb24, alt: "Gallery Image" },
-  { src: img25, thumbnailSrc: thumb25, alt: "Gallery Image" },
-  { src: img26, thumbnailSrc: thumb26, alt: "Gallery Image" },
-  { src: img27, thumbnailSrc: thumb27, alt: "Gallery Image" },
-  { src: img28, thumbnailSrc: thumb28, alt: "Gallery Image" },
-  { src: img29, thumbnailSrc: thumb29, alt: "Gallery Image" },
-  { src: img30, thumbnailSrc: thumb30, alt: "Gallery Image" },
-  { src: img31, thumbnailSrc: thumb31, alt: "Gallery Image" },
-  { src: img32, thumbnailSrc: thumb32, alt: "Gallery Image" },
-  { src: img33, thumbnailSrc: thumb33, alt: "Gallery Image" },
-  { src: img34, thumbnailSrc: thumb34, alt: "Gallery Image" },
-  { src: img35, thumbnailSrc: thumb35, alt: "Gallery Image" },
-  { src: img36, thumbnailSrc: thumb36, alt: "Gallery Image" },
-  { src: img37, thumbnailSrc: thumb37, alt: "Gallery Image" },
-  { src: img38, thumbnailSrc: thumb38, alt: "Gallery Image" },
-  { src: img39, thumbnailSrc: thumb39, alt: "Gallery Image" },
-  { src: img40, thumbnailSrc: thumb40, alt: "Gallery Image" },
-  { src: img41, thumbnailSrc: thumb41, alt: "Gallery Image" },
-  { src: img42, thumbnailSrc: thumb42, alt: "Gallery Image" },
-  { src: img43, thumbnailSrc: thumb43, alt: "Gallery Image" },
-  { src: img44, thumbnailSrc: thumb44, alt: "Gallery Image" },
-  { src: img45, thumbnailSrc: thumb45, alt: "Gallery Image" },
-  { src: img46, thumbnailSrc: thumb46, alt: "Gallery Image" },
-  { src: img47, thumbnailSrc: thumb47, alt: "Gallery Image" },
-  { src: img48, thumbnailSrc: thumb48, alt: "Gallery Image" },
-  { src: img49, thumbnailSrc: thumb49, alt: "Gallery Image" },
-  { src: img50, thumbnailSrc: thumb50, alt: "Gallery Image" },
-  { src: img51, thumbnailSrc: thumb51, alt: "Gallery Image" },
-  { src: img52, thumbnailSrc: thumb52, alt: "Gallery Image" },
-  { src: img53, thumbnailSrc: thumb53, alt: "Gallery Image" },
-  { src: img54, thumbnailSrc: thumb54, alt: "Gallery Image" },
-  { src: img55, thumbnailSrc: thumb55, alt: "Gallery Image" },
-  { src: img56, thumbnailSrc: thumb56, alt: "Gallery Image" },
-  { src: img57, thumbnailSrc: thumb57, alt: "Gallery Image" },
-  { src: img58, thumbnailSrc: thumb58, alt: "Gallery Image" },
+  { staticImageData: img1, thumbStaticImageData: thumb1, alt: "Gallery Image" },
+  { staticImageData: img2, thumbStaticImageData: thumb2, alt: "Gallery Image" },
+  { staticImageData: img3, thumbStaticImageData: thumb3, alt: "Gallery Image" },
+  { staticImageData: img4, thumbStaticImageData: thumb4, alt: "Gallery Image" },
+  { staticImageData: img5, thumbStaticImageData: thumb5, alt: "Gallery Image" },
+  { staticImageData: img6, thumbStaticImageData: thumb6, alt: "Gallery Image" },
+  { staticImageData: img7, thumbStaticImageData: thumb7, alt: "Gallery Image" },
+  { staticImageData: img8, thumbStaticImageData: thumb8, alt: "Gallery Image" },
+  { staticImageData: img9, thumbStaticImageData: thumb9, alt: "Gallery Image" },
+  {
+    staticImageData: img10,
+    thumbStaticImageData: thumb10,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img11,
+    thumbStaticImageData: thumb11,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img12,
+    thumbStaticImageData: thumb12,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img13,
+    thumbStaticImageData: thumb13,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img14,
+    thumbStaticImageData: thumb14,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img15,
+    thumbStaticImageData: thumb15,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img16,
+    thumbStaticImageData: thumb16,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img17,
+    thumbStaticImageData: thumb17,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img18,
+    thumbStaticImageData: thumb18,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img19,
+    thumbStaticImageData: thumb19,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img20,
+    thumbStaticImageData: thumb20,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img21,
+    thumbStaticImageData: thumb21,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img22,
+    thumbStaticImageData: thumb22,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img23,
+    thumbStaticImageData: thumb23,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img24,
+    thumbStaticImageData: thumb24,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img25,
+    thumbStaticImageData: thumb25,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img26,
+    thumbStaticImageData: thumb26,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img27,
+    thumbStaticImageData: thumb27,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img28,
+    thumbStaticImageData: thumb28,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img29,
+    thumbStaticImageData: thumb29,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img30,
+    thumbStaticImageData: thumb30,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img31,
+    thumbStaticImageData: thumb31,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img32,
+    thumbStaticImageData: thumb32,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img33,
+    thumbStaticImageData: thumb33,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img34,
+    thumbStaticImageData: thumb34,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img35,
+    thumbStaticImageData: thumb35,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img36,
+    thumbStaticImageData: thumb36,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img37,
+    thumbStaticImageData: thumb37,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img38,
+    thumbStaticImageData: thumb38,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img39,
+    thumbStaticImageData: thumb39,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img40,
+    thumbStaticImageData: thumb40,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img41,
+    thumbStaticImageData: thumb41,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img42,
+    thumbStaticImageData: thumb42,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img43,
+    thumbStaticImageData: thumb43,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img44,
+    thumbStaticImageData: thumb44,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img45,
+    thumbStaticImageData: thumb45,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img46,
+    thumbStaticImageData: thumb46,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img47,
+    thumbStaticImageData: thumb47,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img48,
+    thumbStaticImageData: thumb48,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img49,
+    thumbStaticImageData: thumb49,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img50,
+    thumbStaticImageData: thumb50,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img51,
+    thumbStaticImageData: thumb51,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img52,
+    thumbStaticImageData: thumb52,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img53,
+    thumbStaticImageData: thumb53,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img54,
+    thumbStaticImageData: thumb54,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img55,
+    thumbStaticImageData: thumb55,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img56,
+    thumbStaticImageData: thumb56,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img57,
+    thumbStaticImageData: thumb57,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img58,
+    thumbStaticImageData: thumb58,
+    alt: "Gallery Image",
+  },
 ];
 
 const DEFAULTS = {
@@ -351,31 +547,25 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
   });
 
   const totalSlots = coords.length;
-  if (pool.length === 0) {
-    return coords.map((c) => ({ ...c, src: "", alt: "", thumbSrc: "" }));
-  }
+
   if (pool.length > totalSlots) {
     console.warn(
       `[DomeGallery] Provided image count (${pool.length}) exceeds available tiles (${totalSlots}). Some images will not be shown.`,
     );
   }
 
-  // Extract src strings from StaticImageData objects
-  const normalizedImages = pool.map((image) => ({
-    src: image.src.src,
-    thumbSrc: image.thumbnailSrc.src,
-    alt: image.alt || "",
-  }));
-
   const usedImages = Array.from(
     { length: totalSlots },
-    (_, i) => normalizedImages[i % normalizedImages.length],
+    (_, i) => pool[i % pool.length],
   );
 
   for (let i = 1; i < usedImages.length; i++) {
-    if (usedImages[i].src === usedImages[i - 1].src) {
+    if (
+      usedImages[i].staticImageData.src ===
+      usedImages[i - 1].staticImageData.src
+    ) {
       for (let j = i + 1; j < usedImages.length; j++) {
-        if (usedImages[j].src !== usedImages[i].src) {
+        if (usedImages[j].staticImageData !== usedImages[i].staticImageData) {
           const tmp = usedImages[i];
           usedImages[i] = usedImages[j];
           usedImages[j] = tmp;
@@ -387,23 +577,10 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
 
   return coords.map((c, i) => ({
     ...c,
-    src: usedImages[i].src,
-    thumbSrc: usedImages[i].thumbSrc,
+    staticImageData: usedImages[i].staticImageData,
+    thumbStaticImageData: usedImages[i].thumbStaticImageData,
     alt: usedImages[i].alt,
   }));
-}
-
-function computeItemBaseRotation(
-  offsetX: number,
-  offsetY: number,
-  sizeX: number,
-  sizeY: number,
-  segments: number,
-) {
-  const unit = 360 / segments / 2;
-  const rotateY = unit * (offsetX + (sizeX - 1) / 2);
-  const rotateX = unit * (offsetY - (sizeY - 1) / 2);
-  return { rotateX, rotateY };
 }
 
 export default function DomeGallery({
@@ -426,21 +603,10 @@ export default function DomeGallery({
   openedImageBorderRadius = "30px",
   grayscale = true,
 }: DomeGalleryProps) {
-  const [mounted, setMounted] = useState(false);
-
   const rootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const sphereRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<HTMLDivElement>(null);
-  const viewerRef = useRef<HTMLDivElement>(null);
-  const scrimRef = useRef<HTMLDivElement>(null);
   const focusedElRef = useRef<HTMLElement | null>(null);
-  const originalTilePositionRef = useRef<{
-    left: number;
-    top: number;
-    width: number;
-    height: number;
-  } | null>(null);
 
   const rotationRef = useRef({ x: 0, y: 0 });
   const startRotRef = useRef({ x: 0, y: 0 });
@@ -452,8 +618,16 @@ export default function DomeGallery({
   const pointerTypeRef = useRef<"mouse" | "pen" | "touch">("mouse");
   const tapTargetRef = useRef<HTMLElement | null>(null);
   const openingRef = useRef(false);
-  const openStartedAtRef = useRef(0);
   const lastDragEndAt = useRef(0);
+
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const selectedImage = useMemo(() => {
+    if (selectedIndex === null) return null;
+    const item = images[selectedIndex];
+    if (!item) return null;
+    return item;
+  }, [images, selectedIndex]);
 
   const items = useMemo(() => buildItems(images, segments), [images, segments]);
 
@@ -525,51 +699,6 @@ export default function DomeGallery({
           grayscale ? "grayscale(1)" : "none",
         );
         applyTransform(rotationRef.current.x, rotationRef.current.y);
-
-        const enlargedOverlay = viewerRef.current?.querySelector(
-          ".enlarge",
-        ) as HTMLElement;
-        if (enlargedOverlay && frameRef.current && mainRef.current) {
-          const frameR = frameRef.current.getBoundingClientRect();
-          const mainR = mainRef.current.getBoundingClientRect();
-
-          const hasCustomSize = openedImageWidth && openedImageHeight;
-          if (hasCustomSize) {
-            // Style'ı prop değerlerine güncelle
-            enlargedOverlay.style.width = openedImageWidth;
-            enlargedOverlay.style.height = openedImageHeight;
-
-            // Layout reflow
-            void enlargedOverlay.offsetWidth;
-
-            const overlayRect = enlargedOverlay.getBoundingClientRect();
-
-            // parentRect hesabı (offsetParent kimse ona göre)
-            const offsetParent =
-              (enlargedOverlay.offsetParent as HTMLElement) || document.body;
-            const parentRect = offsetParent.getBoundingClientRect();
-
-            // Overlay'in offsetParent içindeki konumu:
-            // Frame'in solundan parent'ın solunu çıkar (parent içindeki frame offseti)
-            // + Frame içinde ortala
-            const centeredLeft =
-              frameR.left -
-              parentRect.left +
-              (frameR.width - overlayRect.width) / 2;
-            const centeredTop =
-              frameR.top -
-              parentRect.top +
-              (frameR.height - overlayRect.height) / 2;
-
-            enlargedOverlay.style.left = `${centeredLeft}px`;
-            enlargedOverlay.style.top = `${centeredTop}px`;
-          } else {
-            enlargedOverlay.style.left = `${frameR.left - mainR.left}px`;
-            enlargedOverlay.style.top = `${frameR.top - mainR.top}px`;
-            enlargedOverlay.style.width = `${frameR.width}px`;
-            enlargedOverlay.style.height = `${frameR.height}px`;
-          }
-        }
       });
     });
 
@@ -735,7 +864,12 @@ export default function DomeGallery({
           cancelTapRef.current = !isTap;
 
           if (isTap && tapTargetRef.current && !focusedElRef.current) {
-            openItemFromElement(tapTargetRef.current);
+            const src = tapTargetRef.current.getAttribute("data-src");
+            if (src) {
+              setSelectedIndex(
+                images.findIndex((img) => img.staticImageData.src === src),
+              );
+            }
           }
           tapTargetRef.current = null;
 
@@ -750,259 +884,37 @@ export default function DomeGallery({
   );
 
   const close = useCallback(() => {
-    if (performance.now() - openStartedAtRef.current < 250) return;
-    const el = focusedElRef.current;
-    if (!el) return;
-    const parent = el.parentElement as HTMLElement;
-    const overlay = viewerRef.current?.querySelector(
-      ".enlarge",
-    ) as HTMLElement | null;
-    if (!overlay) return;
-
-    const refDiv = parent.querySelector(
-      ".item__image--reference",
-    ) as HTMLElement | null;
-
-    const originalPos = originalTilePositionRef.current;
-    if (!originalPos) {
-      overlay.remove();
-      if (refDiv) refDiv.remove();
-      parent.style.setProperty("--rot-y-delta", `0deg`);
-      parent.style.setProperty("--rot-x-delta", `0deg`);
-      el.style.visibility = "";
-      (el.style as any).zIndex = 0;
+    setSelectedIndex(null);
+    if (focusedElRef.current) {
+      focusedElRef.current.style.visibility = "";
       focusedElRef.current = null;
-      rootRef.current?.removeAttribute("data-enlarging");
-      if (scrimRef.current) {
-        scrimRef.current.style.pointerEvents = "none";
-        scrimRef.current.style.opacity = "0";
-      }
-      openingRef.current = false;
-      return;
-    }
-
-    const currentRect = overlay.getBoundingClientRect();
-
-    const animatingOverlay = document.createElement("div");
-    animatingOverlay.className = "enlarge-closing";
-    animatingOverlay.style.cssText = `
-        position: fixed;
-        left: ${currentRect.left}px;
-        top: ${currentRect.top}px;
-        width: ${currentRect.width}px;
-        height: ${currentRect.height}px;
-        z-index: 9999;
-        border-radius: ${openedImageBorderRadius};
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,.35);
-        transition: all ${enlargeTransitionMs}ms ease-out;
-        pointer-events: none;
-        margin: 0;
-        transform: none;
-        filter: ${grayscale ? "grayscale(1)" : "none"};
-      `;
-
-    const originalImg = overlay.querySelector("img");
-    if (originalImg) {
-      const img = originalImg.cloneNode() as HTMLImageElement;
-      img.style.cssText = "width: 100%; height: 100%; object-fit: cover;";
-      animatingOverlay.appendChild(img);
-    }
-
-    overlay.remove();
-    document.body.appendChild(animatingOverlay);
-
-    void animatingOverlay.getBoundingClientRect();
-
-    requestAnimationFrame(() => {
-      animatingOverlay.style.left = originalPos.left + "px";
-      animatingOverlay.style.top = originalPos.top + "px";
-      animatingOverlay.style.width = originalPos.width + "px";
-      animatingOverlay.style.height = originalPos.height + "px";
-      animatingOverlay.style.opacity = "0";
-    });
-
-    if (scrimRef.current) {
-      scrimRef.current.style.pointerEvents = "none";
-      scrimRef.current.style.opacity = "0";
-    }
-
-    const cleanup = () => {
-      animatingOverlay.remove();
-      originalTilePositionRef.current = null;
-
-      if (refDiv) refDiv.remove();
-      parent.style.transition = "none";
-      el.style.transition = "none";
-
-      parent.style.setProperty("--rot-y-delta", `0deg`);
-      parent.style.setProperty("--rot-x-delta", `0deg`);
-
-      requestAnimationFrame(() => {
-        el.style.visibility = "";
-        el.style.opacity = "0";
-        (el.style as any).zIndex = 0;
-        focusedElRef.current = null;
-        rootRef.current?.removeAttribute("data-enlarging");
-
-        requestAnimationFrame(() => {
-          parent.style.transition = "";
-          el.style.transition = "opacity 300ms ease-out";
-
-          requestAnimationFrame(() => {
-            el.style.opacity = "1";
-            setTimeout(() => {
-              el.style.transition = "";
-              el.style.opacity = "";
-              openingRef.current = false;
-            }, 300);
-          });
-        });
-      });
-    };
-
-    animatingOverlay.addEventListener("transitionend", cleanup, {
-      once: true,
-    });
-
-    setMounted(false);
-  }, [enlargeTransitionMs, openedImageBorderRadius, grayscale]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [close]);
-
-  const openItemFromElement = useCallback((el: HTMLElement) => {
-    setMounted(true);
-    if (openingRef.current) return;
-    openingRef.current = true;
-    openStartedAtRef.current = performance.now();
-    const parent = el.parentElement as HTMLElement;
-    focusedElRef.current = el;
-    el.setAttribute("data-focused", "true");
-    const offsetX = getDataNumber(parent, "offsetX", 0);
-    const offsetY = getDataNumber(parent, "offsetY", 0);
-    if (scrimRef.current) scrimRef.current.style.pointerEvents = "auto";
-    const sizeX = getDataNumber(parent, "sizeX", 2);
-    const sizeY = getDataNumber(parent, "sizeY", 2);
-    const parentRot = computeItemBaseRotation(
-      offsetX,
-      offsetY,
-      sizeX,
-      sizeY,
-      segments,
-    );
-    const parentY = normalizeAngle(parentRot.rotateY);
-    const globalY = normalizeAngle(rotationRef.current.y);
-    let rotY = -(parentY + globalY) % 360;
-    if (rotY < -180) rotY += 360;
-    const rotX = -parentRot.rotateX - rotationRef.current.x;
-    parent.style.setProperty("--rot-y-delta", `${rotY}deg`);
-    parent.style.setProperty("--rot-x-delta", `${rotX}deg`);
-    const refDiv = document.createElement("div");
-    refDiv.className = "item__image item__image--reference opacity-0";
-    refDiv.style.transform = `rotateX(${-parentRot.rotateX}deg) rotateY(${-parentRot.rotateY}deg)`;
-    parent.appendChild(refDiv);
-
-    void refDiv.offsetHeight;
-
-    const tileR = refDiv.getBoundingClientRect();
-    const mainR = mainRef.current?.getBoundingClientRect();
-    const frameR = frameRef.current?.getBoundingClientRect();
-
-    if (!mainR || !frameR || tileR.width <= 0 || tileR.height <= 0) {
-      openingRef.current = false;
-      focusedElRef.current = null;
-      parent.removeChild(refDiv);
-      return;
-    }
-
-    originalTilePositionRef.current = {
-      left: tileR.left,
-      top: tileR.top,
-      width: tileR.width,
-      height: tileR.height,
-    };
-    el.style.visibility = "hidden";
-    (el.style as any).zIndex = 0;
-    const overlay = document.createElement("div");
-    overlay.className = "enlarge";
-    overlay.style.cssText = `position:absolute; left:0; top:0; width:${frameR.width}px; height:${frameR.height}px; opacity:0; z-index:30; will-change:transform,opacity; transform-origin:top left; transition:transform ${enlargeTransitionMs}ms ease, opacity ${enlargeTransitionMs}ms ease; border-radius:${openedImageBorderRadius}; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.35);`;
-    const rawSrc =
-      parent.dataset.src ||
-      (el.querySelector("img") as HTMLImageElement)?.src ||
-      "";
-    const rawAlt =
-      parent.dataset.alt ||
-      (el.querySelector("img") as HTMLImageElement)?.alt ||
-      "";
-    const img = document.createElement("img");
-    img.src = rawSrc;
-    img.alt = rawAlt;
-    img.style.cssText = `width:100%; height:100%; object-fit:cover; filter:${grayscale ? "grayscale(1)" : "none"};`;
-    overlay.appendChild(img);
-    frameRef.current!.appendChild(overlay);
-    const tx0 = tileR.left - frameR.left;
-    const ty0 = tileR.top - frameR.top;
-    const sx0 = tileR.width / frameR.width;
-    const sy0 = tileR.height / frameR.height;
-
-    const validSx0 = isFinite(sx0) && sx0 > 0 ? sx0 : 1;
-    const validSy0 = isFinite(sy0) && sy0 > 0 ? sy0 : 1;
-
-    overlay.style.transform = `translate(${tx0}px, ${ty0}px) scale(${validSx0}, ${validSy0})`;
-    setTimeout(() => {
-      if (!overlay.parentElement) return;
-      overlay.style.opacity = "1";
-      overlay.style.transform = "translate(0px, 0px) scale(1, 1)";
-      rootRef.current?.setAttribute("data-enlarging", "true");
-      if (scrimRef.current) {
-        scrimRef.current.style.pointerEvents = "auto";
-        scrimRef.current.style.opacity = "1";
-      }
-    }, 16);
-    const wantsResize = openedImageWidth || openedImageHeight;
-    if (wantsResize) {
-      const onFirstEnd = (ev: TransitionEvent) => {
-        if (ev.propertyName !== "transform") return;
-        overlay.removeEventListener("transitionend", onFirstEnd);
-        const prevTransition = overlay.style.transition;
-        overlay.style.transition = "none";
-        const tempWidth = openedImageWidth || `${frameR.width}px`;
-        const tempHeight = openedImageHeight || `${frameR.height}px`;
-        overlay.style.width = tempWidth;
-        overlay.style.height = tempHeight;
-        const newRect = overlay.getBoundingClientRect();
-        overlay.style.width = frameR.width + "px";
-        overlay.style.height = frameR.height + "px";
-        void overlay.offsetWidth;
-        overlay.style.transition = `left ${enlargeTransitionMs}ms ease, top ${enlargeTransitionMs}ms ease, width ${enlargeTransitionMs}ms ease, height ${enlargeTransitionMs}ms ease`;
-        const centeredLeft = (frameR.width - newRect.width) / 2;
-        const centeredTop = (frameR.height - newRect.height) / 2;
-        requestAnimationFrame(() => {
-          overlay.style.left = `${centeredLeft}px`;
-          overlay.style.top = `${centeredTop}px`;
-          overlay.style.width = tempWidth;
-          overlay.style.height = tempHeight;
-          if (openedImageMaxHeight) {
-            overlay.style.maxHeight = openedImageMaxHeight;
-          }
-        });
-        const cleanupSecond = () => {
-          overlay.removeEventListener("transitionend", cleanupSecond);
-          overlay.style.transition = prevTransition;
-        };
-        overlay.addEventListener("transitionend", cleanupSecond, {
-          once: true,
-        });
-      };
-      overlay.addEventListener("transitionend", onFirstEnd);
     }
   }, []);
+
+  const handleNext = useCallback(() => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return null;
+      return (prev + 1) % images.length;
+    });
+  }, [images.length]);
+
+  const handlePrev = useCallback(() => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return null;
+      return (prev - 1 + images.length) % images.length;
+    });
+  }, [images.length]);
+
+  const openItemFromElement = useCallback(
+    (item: ItemDef) => {
+      setSelectedIndex(
+        images.findIndex(
+          (img) => img.staticImageData.src === item.staticImageData.src,
+        ),
+      );
+    },
+    [images],
+  );
 
   const sphereRootStyle = useMemo<React.CSSProperties>(
     () => ({
@@ -1028,33 +940,6 @@ export default function DomeGallery({
       WebkitUserSelect: "none",
     }),
     [],
-  );
-
-  const viewerContainerStyle = useMemo<React.CSSProperties>(
-    () =>
-      ({
-        padding: "var(--viewer-pad)",
-        "--enlarge-radius": openedImageBorderRadius,
-        "--viewer-pad":
-          rootRef.current?.style.getPropertyValue("--viewer-pad") || "72px",
-      }) as React.CSSProperties,
-    [openedImageBorderRadius],
-  );
-
-  const scrimStyle = useMemo<React.CSSProperties>(
-    () => ({
-      background: "rgba(0, 0, 0, 0.4)",
-      backdropFilter: "blur(3px)",
-      pointerEvents: "none",
-    }),
-    [],
-  );
-
-  const viewerFrameStyle = useMemo<React.CSSProperties>(
-    () => ({
-      borderRadius: `var(--enlarge-radius, ${openedImageBorderRadius})`,
-    }),
-    [openedImageBorderRadius],
   );
 
   return (
@@ -1084,17 +969,15 @@ export default function DomeGallery({
             />
           </div>
         </main>
-        {mounted && (
+        {selectedImage ? (
           <DomeViewer
-            viewerRef={viewerRef}
-            scrimRef={scrimRef}
-            frameRef={frameRef}
+            staticImageData={selectedImage.staticImageData}
+            alt={selectedImage.alt}
             onClose={close}
-            viewerContainerStyle={viewerContainerStyle}
-            scrimStyle={scrimStyle}
-            viewerFrameStyle={viewerFrameStyle}
+            onNext={handleNext}
+            onPrev={handlePrev}
           />
-        )}
+        ) : null}
       </div>
     </>
   );
