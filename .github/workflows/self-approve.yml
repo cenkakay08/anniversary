@@ -27,4 +27,4 @@ jobs:
         if: success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run deploy.yml --ref master
+        run: gh workflow run deploy.yml --ref master --repo ${{ github.repository }}
