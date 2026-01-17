@@ -125,9 +125,9 @@ import thumb57 from "@/public/thumbnails/mmexport1763047108172.jpg";
 import thumb58 from "@/public/thumbnails/mmexport1763828028347.jpg";
 
 type ImageItem = {
-  src: StaticImageData;
-  thumbnailSrc: StaticImageData;
-  alt?: string;
+  staticImageData: StaticImageData;
+  thumbStaticImageData: StaticImageData;
+  alt: string;
 };
 
 type DomeGalleryProps = {
@@ -152,74 +152,270 @@ type DomeGalleryProps = {
 };
 
 export type ItemDef = {
-  src: string;
+  staticImageData: StaticImageData;
   alt: string;
   x: number;
   y: number;
   sizeX: number;
   sizeY: number;
-  thumbSrc: string;
+  thumbStaticImageData: StaticImageData;
 };
 
 const DEFAULT_IMAGES: ImageItem[] = [
-  { src: img1, thumbnailSrc: thumb1, alt: "Gallery Image" },
-  { src: img2, thumbnailSrc: thumb2, alt: "Gallery Image" },
-  { src: img3, thumbnailSrc: thumb3, alt: "Gallery Image" },
-  { src: img4, thumbnailSrc: thumb4, alt: "Gallery Image" },
-  { src: img5, thumbnailSrc: thumb5, alt: "Gallery Image" },
-  { src: img6, thumbnailSrc: thumb6, alt: "Gallery Image" },
-  { src: img7, thumbnailSrc: thumb7, alt: "Gallery Image" },
-  { src: img8, thumbnailSrc: thumb8, alt: "Gallery Image" },
-  { src: img9, thumbnailSrc: thumb9, alt: "Gallery Image" },
-  { src: img10, thumbnailSrc: thumb10, alt: "Gallery Image" },
-  { src: img11, thumbnailSrc: thumb11, alt: "Gallery Image" },
-  { src: img12, thumbnailSrc: thumb12, alt: "Gallery Image" },
-  { src: img13, thumbnailSrc: thumb13, alt: "Gallery Image" },
-  { src: img14, thumbnailSrc: thumb14, alt: "Gallery Image" },
-  { src: img15, thumbnailSrc: thumb15, alt: "Gallery Image" },
-  { src: img16, thumbnailSrc: thumb16, alt: "Gallery Image" },
-  { src: img17, thumbnailSrc: thumb17, alt: "Gallery Image" },
-  { src: img18, thumbnailSrc: thumb18, alt: "Gallery Image" },
-  { src: img19, thumbnailSrc: thumb19, alt: "Gallery Image" },
-  { src: img20, thumbnailSrc: thumb20, alt: "Gallery Image" },
-  { src: img21, thumbnailSrc: thumb21, alt: "Gallery Image" },
-  { src: img22, thumbnailSrc: thumb22, alt: "Gallery Image" },
-  { src: img23, thumbnailSrc: thumb23, alt: "Gallery Image" },
-  { src: img24, thumbnailSrc: thumb24, alt: "Gallery Image" },
-  { src: img25, thumbnailSrc: thumb25, alt: "Gallery Image" },
-  { src: img26, thumbnailSrc: thumb26, alt: "Gallery Image" },
-  { src: img27, thumbnailSrc: thumb27, alt: "Gallery Image" },
-  { src: img28, thumbnailSrc: thumb28, alt: "Gallery Image" },
-  { src: img29, thumbnailSrc: thumb29, alt: "Gallery Image" },
-  { src: img30, thumbnailSrc: thumb30, alt: "Gallery Image" },
-  { src: img31, thumbnailSrc: thumb31, alt: "Gallery Image" },
-  { src: img32, thumbnailSrc: thumb32, alt: "Gallery Image" },
-  { src: img33, thumbnailSrc: thumb33, alt: "Gallery Image" },
-  { src: img34, thumbnailSrc: thumb34, alt: "Gallery Image" },
-  { src: img35, thumbnailSrc: thumb35, alt: "Gallery Image" },
-  { src: img36, thumbnailSrc: thumb36, alt: "Gallery Image" },
-  { src: img37, thumbnailSrc: thumb37, alt: "Gallery Image" },
-  { src: img38, thumbnailSrc: thumb38, alt: "Gallery Image" },
-  { src: img39, thumbnailSrc: thumb39, alt: "Gallery Image" },
-  { src: img40, thumbnailSrc: thumb40, alt: "Gallery Image" },
-  { src: img41, thumbnailSrc: thumb41, alt: "Gallery Image" },
-  { src: img42, thumbnailSrc: thumb42, alt: "Gallery Image" },
-  { src: img43, thumbnailSrc: thumb43, alt: "Gallery Image" },
-  { src: img44, thumbnailSrc: thumb44, alt: "Gallery Image" },
-  { src: img45, thumbnailSrc: thumb45, alt: "Gallery Image" },
-  { src: img46, thumbnailSrc: thumb46, alt: "Gallery Image" },
-  { src: img47, thumbnailSrc: thumb47, alt: "Gallery Image" },
-  { src: img48, thumbnailSrc: thumb48, alt: "Gallery Image" },
-  { src: img49, thumbnailSrc: thumb49, alt: "Gallery Image" },
-  { src: img50, thumbnailSrc: thumb50, alt: "Gallery Image" },
-  { src: img51, thumbnailSrc: thumb51, alt: "Gallery Image" },
-  { src: img52, thumbnailSrc: thumb52, alt: "Gallery Image" },
-  { src: img53, thumbnailSrc: thumb53, alt: "Gallery Image" },
-  { src: img54, thumbnailSrc: thumb54, alt: "Gallery Image" },
-  { src: img55, thumbnailSrc: thumb55, alt: "Gallery Image" },
-  { src: img56, thumbnailSrc: thumb56, alt: "Gallery Image" },
-  { src: img57, thumbnailSrc: thumb57, alt: "Gallery Image" },
-  { src: img58, thumbnailSrc: thumb58, alt: "Gallery Image" },
+  { staticImageData: img1, thumbStaticImageData: thumb1, alt: "Gallery Image" },
+  { staticImageData: img2, thumbStaticImageData: thumb2, alt: "Gallery Image" },
+  { staticImageData: img3, thumbStaticImageData: thumb3, alt: "Gallery Image" },
+  { staticImageData: img4, thumbStaticImageData: thumb4, alt: "Gallery Image" },
+  { staticImageData: img5, thumbStaticImageData: thumb5, alt: "Gallery Image" },
+  { staticImageData: img6, thumbStaticImageData: thumb6, alt: "Gallery Image" },
+  { staticImageData: img7, thumbStaticImageData: thumb7, alt: "Gallery Image" },
+  { staticImageData: img8, thumbStaticImageData: thumb8, alt: "Gallery Image" },
+  { staticImageData: img9, thumbStaticImageData: thumb9, alt: "Gallery Image" },
+  {
+    staticImageData: img10,
+    thumbStaticImageData: thumb10,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img11,
+    thumbStaticImageData: thumb11,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img12,
+    thumbStaticImageData: thumb12,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img13,
+    thumbStaticImageData: thumb13,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img14,
+    thumbStaticImageData: thumb14,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img15,
+    thumbStaticImageData: thumb15,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img16,
+    thumbStaticImageData: thumb16,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img17,
+    thumbStaticImageData: thumb17,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img18,
+    thumbStaticImageData: thumb18,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img19,
+    thumbStaticImageData: thumb19,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img20,
+    thumbStaticImageData: thumb20,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img21,
+    thumbStaticImageData: thumb21,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img22,
+    thumbStaticImageData: thumb22,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img23,
+    thumbStaticImageData: thumb23,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img24,
+    thumbStaticImageData: thumb24,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img25,
+    thumbStaticImageData: thumb25,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img26,
+    thumbStaticImageData: thumb26,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img27,
+    thumbStaticImageData: thumb27,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img28,
+    thumbStaticImageData: thumb28,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img29,
+    thumbStaticImageData: thumb29,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img30,
+    thumbStaticImageData: thumb30,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img31,
+    thumbStaticImageData: thumb31,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img32,
+    thumbStaticImageData: thumb32,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img33,
+    thumbStaticImageData: thumb33,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img34,
+    thumbStaticImageData: thumb34,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img35,
+    thumbStaticImageData: thumb35,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img36,
+    thumbStaticImageData: thumb36,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img37,
+    thumbStaticImageData: thumb37,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img38,
+    thumbStaticImageData: thumb38,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img39,
+    thumbStaticImageData: thumb39,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img40,
+    thumbStaticImageData: thumb40,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img41,
+    thumbStaticImageData: thumb41,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img42,
+    thumbStaticImageData: thumb42,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img43,
+    thumbStaticImageData: thumb43,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img44,
+    thumbStaticImageData: thumb44,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img45,
+    thumbStaticImageData: thumb45,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img46,
+    thumbStaticImageData: thumb46,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img47,
+    thumbStaticImageData: thumb47,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img48,
+    thumbStaticImageData: thumb48,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img49,
+    thumbStaticImageData: thumb49,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img50,
+    thumbStaticImageData: thumb50,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img51,
+    thumbStaticImageData: thumb51,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img52,
+    thumbStaticImageData: thumb52,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img53,
+    thumbStaticImageData: thumb53,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img54,
+    thumbStaticImageData: thumb54,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img55,
+    thumbStaticImageData: thumb55,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img56,
+    thumbStaticImageData: thumb56,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img57,
+    thumbStaticImageData: thumb57,
+    alt: "Gallery Image",
+  },
+  {
+    staticImageData: img58,
+    thumbStaticImageData: thumb58,
+    alt: "Gallery Image",
+  },
 ];
 
 const DEFAULTS = {
@@ -351,31 +547,25 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
   });
 
   const totalSlots = coords.length;
-  if (pool.length === 0) {
-    return coords.map((c) => ({ ...c, src: "", alt: "", thumbSrc: "" }));
-  }
+
   if (pool.length > totalSlots) {
     console.warn(
       `[DomeGallery] Provided image count (${pool.length}) exceeds available tiles (${totalSlots}). Some images will not be shown.`,
     );
   }
 
-  // Extract src strings from StaticImageData objects
-  const normalizedImages = pool.map((image) => ({
-    src: image.src.src,
-    thumbSrc: image.thumbnailSrc.src,
-    alt: image.alt || "",
-  }));
-
   const usedImages = Array.from(
     { length: totalSlots },
-    (_, i) => normalizedImages[i % normalizedImages.length],
+    (_, i) => pool[i % pool.length],
   );
 
   for (let i = 1; i < usedImages.length; i++) {
-    if (usedImages[i].src === usedImages[i - 1].src) {
+    if (
+      usedImages[i].staticImageData.src ===
+      usedImages[i - 1].staticImageData.src
+    ) {
       for (let j = i + 1; j < usedImages.length; j++) {
-        if (usedImages[j].src !== usedImages[i].src) {
+        if (usedImages[j].staticImageData !== usedImages[i].staticImageData) {
           const tmp = usedImages[i];
           usedImages[i] = usedImages[j];
           usedImages[j] = tmp;
@@ -387,23 +577,10 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
 
   return coords.map((c, i) => ({
     ...c,
-    src: usedImages[i].src,
-    thumbSrc: usedImages[i].thumbSrc,
+    staticImageData: usedImages[i].staticImageData,
+    thumbStaticImageData: usedImages[i].thumbStaticImageData,
     alt: usedImages[i].alt,
   }));
-}
-
-function computeItemBaseRotation(
-  offsetX: number,
-  offsetY: number,
-  sizeX: number,
-  sizeY: number,
-  segments: number,
-) {
-  const unit = 360 / segments / 2;
-  const rotateY = unit * (offsetX + (sizeX - 1) / 2);
-  const rotateX = unit * (offsetY - (sizeY - 1) / 2);
-  return { rotateX, rotateY };
 }
 
 export default function DomeGallery({
@@ -449,10 +626,7 @@ export default function DomeGallery({
     if (selectedIndex === null) return null;
     const item = images[selectedIndex];
     if (!item) return null;
-    return {
-      src: item.src.src,
-      alt: item.alt || "Gallery Image",
-    };
+    return item;
   }, [images, selectedIndex]);
 
   const items = useMemo(() => buildItems(images, segments), [images, segments]);
@@ -690,7 +864,12 @@ export default function DomeGallery({
           cancelTapRef.current = !isTap;
 
           if (isTap && tapTargetRef.current && !focusedElRef.current) {
-            openItemFromElement(tapTargetRef.current);
+            const src = tapTargetRef.current.getAttribute("data-src");
+            if (src) {
+              setSelectedIndex(
+                images.findIndex((img) => img.staticImageData.src === src),
+              );
+            }
           }
           tapTargetRef.current = null;
 
@@ -727,32 +906,12 @@ export default function DomeGallery({
   }, [images.length]);
 
   const openItemFromElement = useCallback(
-    (el: HTMLElement) => {
-      const parent = el.parentElement as HTMLElement;
-      const rawSrc =
-        parent.dataset.src ||
-        (el.querySelector("img") as HTMLImageElement)?.src ||
-        "";
-
-      if (rawSrc) {
-        focusedElRef.current = el; // Keep track if we want to restore focus or visibility later
-
-        // Find index in original images array
-        // We compare against current rawSrc (which comes from buildItems -> images[i].src.src)
-        const idx = images.findIndex((img) => img.src.src === rawSrc);
-        if (idx !== -1) {
-          setSelectedIndex(idx);
-        } else {
-          // Fallback: try to find by checking if rawSrc ends with the src
-          // This handles cases where rawSrc might be absolute url from img.src
-          const idx2 = images.findIndex(
-            (img) => rawSrc.endsWith(img.src.src) || rawSrc === img.src.src,
-          );
-          if (idx2 !== -1) {
-            setSelectedIndex(idx2);
-          }
-        }
-      }
+    (item: ItemDef) => {
+      setSelectedIndex(
+        images.findIndex(
+          (img) => img.staticImageData.src === item.staticImageData.src,
+        ),
+      );
     },
     [images],
   );
@@ -812,7 +971,7 @@ export default function DomeGallery({
         </main>
         {selectedImage ? (
           <DomeViewer
-            src={selectedImage.src}
+            staticImageData={selectedImage.staticImageData}
             alt={selectedImage.alt}
             onClose={close}
             onNext={handleNext}

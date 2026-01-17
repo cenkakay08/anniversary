@@ -1,5 +1,4 @@
 import React, { memo, forwardRef, useCallback } from "react";
-import Image from "next/image";
 import { ItemDef } from "./DomeGallery";
 import DomeSphereItem from "./DomeSphereItem";
 
@@ -9,7 +8,7 @@ interface DomeSphereProps {
   movedRef: React.MutableRefObject<boolean>;
   lastDragEndAtRef: React.MutableRefObject<number>;
   openingRef: React.MutableRefObject<boolean>;
-  onOpenItem: (el: HTMLElement) => void;
+  onOpenItem: (item: ItemDef) => void;
   imageBorderRadius: string;
   grayscale: boolean;
 }
@@ -34,6 +33,7 @@ const DomeSphere = forwardRef<HTMLDivElement, DomeSphereProps>(
           | React.MouseEvent<HTMLDivElement>
           | React.PointerEvent<HTMLDivElement>,
         eventType: "click" | "pointerUp",
+        item: ItemDef,
       ) => {
         if (eventType === "pointerUp") {
           if ((e.nativeEvent as PointerEvent).pointerType !== "touch") return;
@@ -43,7 +43,7 @@ const DomeSphere = forwardRef<HTMLDivElement, DomeSphereProps>(
         if (movedRef.current) return;
         if (performance.now() - lastDragEndAtRef.current < 80) return;
         if (openingRef.current) return;
-        onOpenItem(e.currentTarget as HTMLElement);
+        onOpenItem(item);
       },
       [onOpenItem, draggingRef, movedRef, lastDragEndAtRef, openingRef],
     );

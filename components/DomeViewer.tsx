@@ -1,15 +1,23 @@
 import React, { memo } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
+import { StaticImageData } from "next/image";
 
 interface DomeViewerProps {
-  src: string;
+  staticImageData: StaticImageData;
   alt: string;
   onClose: () => void;
   onNext: () => void;
   onPrev: () => void;
 }
 
-const DomeViewer = ({ src, alt, onClose, onNext, onPrev }: DomeViewerProps) => {
+const DomeViewer = ({
+  staticImageData,
+  alt,
+  onClose,
+  onNext,
+  onPrev,
+}: DomeViewerProps) => {
   const handleRef = React.useCallback(
     (node: HTMLDivElement | null) => {
       if (node) {
@@ -53,87 +61,89 @@ const DomeViewer = ({ src, alt, onClose, onNext, onPrev }: DomeViewerProps) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-9999 flex items-center justify-center bg-black/80 backdrop-blur-md"
+      className="fixed inset-0 z-1 content-center bg-black/80 p-4 backdrop-blur-md"
+      tabIndex={-1}
+      ref={handleRef}
       onClick={onClose}
     >
-      <div
-        ref={handleRef}
-        tabIndex={-1}
-        className="relative flex h-full max-h-[90vh] w-full max-w-[90vw] items-center justify-center p-4 outline-none"
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onPrev();
+        }}
+        className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:left-4"
+        aria-label="Previous Image"
       >
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onPrev();
-          }}
-          className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:left-4"
-          aria-label="Previous Image"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-
-        <img
-          src={src}
-          alt={alt || "Gallery Image"}
-          className="max-h-full max-w-full rounded-lg object-contain shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        />
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onNext();
-          }}
-          className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:right-4"
-          aria-label="Next Image"
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+      <Image
+        src={staticImageData}
+        alt={alt}
+        className={`mx-auto max-h-full max-w-full rounded-2xl object-contain ${staticImageData.height > staticImageData.width ? "w-fit" : "h-fit w-fit"}`}
+        style={{
+          aspectRatio: staticImageData.width / staticImageData.height,
+        }}
+        width={staticImageData.width}
+        height={staticImageData.height}
+        blurDataURL={staticImageData.blurDataURL}
+        onClick={(e) => e.stopPropagation()}
+      />
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onNext();
+        }}
+        className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:right-4"
+        aria-label="Next Image"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </button>
-
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20 sm:top-8 sm:right-8"
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20 sm:top-8 sm:right-8"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
     </div>,
     document.body,
   );

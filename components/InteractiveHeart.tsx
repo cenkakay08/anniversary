@@ -14,7 +14,6 @@ const InteractiveHeartContent = memo(() => {
         fill
         className="absolute object-contain"
         draggable={false}
-        priority
       />
       <HeartInteraction />
     </>
