@@ -72,7 +72,7 @@ const DomeViewer = ({
           e.stopPropagation();
           onPrev();
         }}
-        className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:left-4"
+        className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white mix-blend-difference transition-colors hover:bg-white/20 sm:left-4"
         aria-label="Previous Image"
       >
         <svg
@@ -107,7 +107,7 @@ const DomeViewer = ({
           e.stopPropagation();
           onNext();
         }}
-        className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:right-4"
+        className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white mix-blend-difference transition-colors hover:bg-white/20 sm:right-4"
         aria-label="Next Image"
       >
         <svg
@@ -127,7 +127,7 @@ const DomeViewer = ({
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20 sm:top-8 sm:right-8"
+        className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white mix-blend-difference transition-colors hover:bg-white/20 sm:top-8 sm:right-8"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
