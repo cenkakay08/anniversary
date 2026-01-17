@@ -57,13 +57,6 @@ const DomeSphereItem = ({
     [onInteraction],
   );
 
-  const handlePointerUp = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      onInteraction(e, "pointerUp", it);
-    },
-    [onInteraction],
-  );
-
   return (
     <div
       className="sphere-item absolute m-auto"
@@ -81,7 +74,6 @@ const DomeSphereItem = ({
         tabIndex={0}
         aria-label={it.alt || "Open image"}
         onClick={handleClick}
-        onPointerUp={handlePointerUp}
         style={imageContainerStyle}
       >
         <Image
