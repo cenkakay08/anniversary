@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import Image from "next/image";
+import CustomImage from "./CustomImage";
 import loversImg from "@/public/svgs/lovers.svg";
 import HeartInteraction from "./HeartInteraction";
 
@@ -8,7 +8,7 @@ import HeartInteraction from "./HeartInteraction";
 const InteractiveHeartContent = memo(() => {
   return (
     <>
-      <Image
+      <CustomImage
         src={loversImg}
         alt="Lovers"
         fill

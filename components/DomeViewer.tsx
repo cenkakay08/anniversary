@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import CustomImage from "./CustomImage";
 import { StaticImageData } from "next/image";
 
 interface DomeViewerProps {
@@ -89,7 +89,8 @@ const DomeViewer = ({
           <polyline points="15 18 9 12 15 6" />
         </svg>
       </button>
-      <Image
+      <CustomImage
+        key={staticImageData.src}
         src={staticImageData}
         alt={alt}
         className={`mx-auto max-h-full max-w-full rounded-2xl object-contain ${staticImageData.height > staticImageData.width ? "w-fit" : "h-fit w-fit"}`}
@@ -98,6 +99,7 @@ const DomeViewer = ({
         }}
         width={staticImageData.width}
         height={staticImageData.height}
+        placeholder="blur"
         blurDataURL={staticImageData.blurDataURL}
         onClick={(e) => e.stopPropagation()}
       />
