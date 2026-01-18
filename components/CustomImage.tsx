@@ -1,37 +1,44 @@
 import { cn } from "@/lib/utils";
 import Image, { ImageProps } from "next/image";
-import React, { memo } from "react";
+import React from "react";
 
-const CustomImage = React.memo((props: ImageProps) => {
-  const [isLoaded, setIsLoaded] = React.useState(false);
-
-  const onLoadEnchaned = React.useCallback(
-    (e: React.SyntheticEvent<HTMLImageElement>) => {
-      setIsLoaded(true);
-      props.onLoad?.(e);
+const CustomImage = React.memo(
+  (
+    props: ImageProps & {
+      isLoaded?: boolean;
+      setIsLoaded?: React.Dispatch<React.SetStateAction<boolean>>;
     },
-    [props.onLoad],
-  );
+  ) => {
+    const { isLoaded, setIsLoaded, ...restProps } = props;
 
-  return (
-    <Image
-      {...props}
-      className={cn(
-        props.className,
-        !isLoaded &&
-          props.blurDataURL &&
-          cn(
-            "h-auto w-full",
-            props.height &&
-              props.width &&
-              props.height >= props.width &&
-              "md:h-full md:w-auto",
-          ),
-      )}
-      onLoad={onLoadEnchaned}
-    />
-  );
-});
+    const onLoadEnchaned = React.useCallback(
+      (e: React.SyntheticEvent<HTMLImageElement>) => {
+        setIsLoaded?.(true);
+        restProps.onLoad?.(e);
+      },
+      [restProps.onLoad],
+    );
+
+    return (
+      <Image
+        {...restProps}
+        className={cn(
+          restProps.className,
+          !isLoaded &&
+            restProps.blurDataURL &&
+            cn(
+              "h-auto w-full",
+              restProps.height &&
+                restProps.width &&
+                restProps.height >= restProps.width &&
+                "md:h-full md:w-auto",
+            ),
+        )}
+        onLoad={onLoadEnchaned}
+      />
+    );
+  },
+);
 
 CustomImage.displayName = "CustomImage";
 
