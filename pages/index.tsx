@@ -7,6 +7,7 @@ import MemoryGallery from "@/components/MemoryGallery";
 import CouplePortrait from "@/components/CouplePortrait";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import Head from "next/head";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,9 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>Forever Together | Our Anniversary</title>
+      </Head>
       <main
         className={`relative z-1 flex size-full flex-col items-center gap-6 sm:gap-12 ${geistSans.className} ${geistMono.className} ${isVisible ? "overflow-auto" : "overflow-hidden"}`}
       >
