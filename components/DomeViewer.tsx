@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { createPortal } from "react-dom";
 import CustomImage from "./CustomImage";
 import { StaticImageData } from "next/image";
+import CustomImageWrapper from "./CustomImageWrapper";
 
 interface DomeViewerProps {
   staticImageData: StaticImageData;
@@ -72,7 +73,7 @@ const DomeViewer = ({
           e.stopPropagation();
           onPrev();
         }}
-        className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white mix-blend-difference transition-colors hover:bg-white/20 sm:left-4"
+        className="absolute top-1/2 left-2 z-1 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white mix-blend-difference transition-colors hover:bg-white/20 sm:left-4"
         aria-label="Previous Image"
       >
         <svg
@@ -89,19 +90,21 @@ const DomeViewer = ({
           <polyline points="15 18 9 12 15 6" />
         </svg>
       </button>
-      <CustomImage
+      <CustomImageWrapper
         key={staticImageData.src}
-        src={staticImageData}
-        alt={alt}
-        className={`mx-auto max-h-full max-w-full rounded-2xl object-contain ${staticImageData.height > staticImageData.width ? "w-fit" : "h-fit w-fit"}`}
-        style={{
-          aspectRatio: staticImageData.width / staticImageData.height,
+        customImageProps={{
+          src: staticImageData,
+          alt: alt,
+          style: {
+            aspectRatio: staticImageData.width / staticImageData.height,
+          },
+          width: staticImageData.width,
+          height: staticImageData.height,
+          className: `mx-auto max-h-full max-w-full rounded-2xl object-contain ${staticImageData.height > staticImageData.width ? "w-fit" : "h-fit w-fit"}`,
+          placeholder: "blur",
+          blurDataURL: staticImageData.blurDataURL,
+          onClick: (e) => e.stopPropagation(),
         }}
-        width={staticImageData.width}
-        height={staticImageData.height}
-        placeholder="blur"
-        blurDataURL={staticImageData.blurDataURL}
-        onClick={(e) => e.stopPropagation()}
       />
       <button
         type="button"
