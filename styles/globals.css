@@ -79,7 +79,7 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
-  --animate-lift: lift 300ms ease-out forwards;
+  --animate-lift: lift 500ms ease-out forwards;
 
   @keyframes lift {
     from {
@@ -92,7 +92,7 @@
     }
   }
 
-  --animate-backdrop-out: backdrop-fade-out 0.5s ease-in-out forwards;
+  --animate-backdrop-out: backdrop-fade-out 500ms ease-in-out forwards;
 
   @keyframes backdrop-fade-out {
     0% {
@@ -265,10 +265,10 @@ body {
     from var(--neon-angle, 0deg),
     transparent 0deg,
     transparent 60deg,
-    #ff2d55 80deg,
-    #ff6b6b 90deg,
-    #4a90e2 100deg,
-    #667eea 110deg,
+    #a3a3a3 80deg,
+    #d4d4d4 90deg,
+    #e5e5e5 100deg,
+    #a3a3a3 110deg,
     transparent 130deg,
     transparent 360deg
   );
@@ -293,10 +293,10 @@ body {
     from var(--neon-angle, 0deg),
     transparent 0deg,
     transparent 60deg,
-    rgba(255, 45, 85, 0.4) 80deg,
-    rgba(255, 107, 107, 0.3) 90deg,
-    rgba(74, 144, 226, 0.3) 100deg,
-    rgba(102, 126, 234, 0.4) 110deg,
+    rgba(163, 163, 163, 0.4) 80deg,
+    rgba(212, 212, 212, 0.3) 90deg,
+    rgba(229, 229, 229, 0.3) 100deg,
+    rgba(163, 163, 163, 0.4) 110deg,
     transparent 130deg,
     transparent 360deg
   );

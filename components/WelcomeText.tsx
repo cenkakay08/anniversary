@@ -1,4 +1,5 @@
 import SplitText from "@/components/SplitText";
+import NeonFlowerBouquet from "@/components/NeonFlowerBouquet";
 import React from "react";
 
 interface WelcomeTextProps {
@@ -29,15 +30,27 @@ export const WelcomeText = React.memo(
           to={{ opacity: 1, y: 0 }}
           threshold={0.1}
           textAlign="center"
-          onLetterAnimationComplete={onLetterAnimationComplete}
         />
         <div
-          className={`absolute top-0 left-0 z-1 size-full place-items-center ${isLiftAnimationCompleted ? "animate-backdrop-out hidden" : "backdrop-blur-sm"}`}
-          onAnimationEnd={onBackdropAnimationEnd}
+          className={`absolute top-0 left-0 z-2 size-full place-items-center ${isLiftAnimationCompleted ? "animate-backdrop-out" : "backdrop-blur-sm"}`}
+          onAnimationEnd={(e) => {
+            if (
+              e.target === e.currentTarget &&
+              e.animationName === "backdrop-fade-out"
+            ) {
+              onBackdropAnimationEnd?.();
+            }
+          }}
         >
+          {/* Neon Flower Bouquet - shown until lift animation completes */}
+          <NeonFlowerBouquet />
           <div
             className={`absolute ${isLetterAnimationCompleted ? "animate-lift" : "top-1/2 -translate-y-1/2"}`}
-            onAnimationEnd={() => setIsLiftAnimationCompleted(true)}
+            onAnimationEnd={(e) => {
+              if (e.target === e.currentTarget && e.animationName === "lift") {
+                setIsLiftAnimationCompleted(true);
+              }
+            }}
           >
             <SplitText
               text="Happy Anniversary, My Love ❤️"
