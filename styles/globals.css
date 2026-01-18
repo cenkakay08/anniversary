@@ -245,3 +245,78 @@ body {
     transform: rotate(360deg) translateX(50px) rotate(-360deg);
   }
 }
+
+/* ============================================
+   Neon Border Animation - Işık Borderlar Üzerinden Geçiyor
+   ============================================ */
+
+.neon-border-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.neon-border-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--neon-angle, 0deg),
+    transparent 0deg,
+    transparent 60deg,
+    #ff2d55 80deg,
+    #ff6b6b 90deg,
+    #4a90e2 100deg,
+    #667eea 110deg,
+    transparent 130deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: neonBorderSpin 4s linear infinite;
+  opacity: 0.8;
+}
+
+.neon-border-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--neon-angle, 0deg),
+    transparent 0deg,
+    transparent 60deg,
+    rgba(255, 45, 85, 0.4) 80deg,
+    rgba(255, 107, 107, 0.3) 90deg,
+    rgba(74, 144, 226, 0.3) 100deg,
+    rgba(102, 126, 234, 0.4) 110deg,
+    transparent 130deg,
+    transparent 360deg
+  );
+  filter: blur(8px);
+  animation: neonBorderSpin 4s linear infinite;
+  z-index: -1;
+}
+
+@keyframes neonBorderSpin {
+  from {
+    --neon-angle: 0deg;
+  }
+  to {
+    --neon-angle: 360deg;
+  }
+}
+
+/* CSS custom property animation için */
+@property --neon-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
