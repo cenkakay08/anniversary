@@ -11,6 +11,16 @@ const CustomImage = React.memo(
   ) => {
     const { isLoaded, setIsLoaded, ...restProps } = props;
 
+    // SVG dosyalarını otomatik olarak unoptimized olarak işaretle
+    // Çünkü SVG'ler vektördür ve loader ile işlenmelerine gerek yoktur
+    const isSvg = React.useMemo(() => {
+      const srcString =
+        typeof restProps.src === "string"
+          ? restProps.src
+          : (restProps.src as any).src || "";
+      return srcString.toLowerCase().split("?")[0].endsWith(".svg");
+    }, [restProps.src]);
+
     const onLoadEnchaned = React.useCallback(
       (e: React.SyntheticEvent<HTMLImageElement>) => {
         setIsLoaded?.(true);
@@ -22,6 +32,7 @@ const CustomImage = React.memo(
     return (
       <Image
         {...restProps}
+        unoptimized={isSvg || restProps.unoptimized}
         className={cn(
           restProps.className,
           !isLoaded &&

@@ -31,6 +31,21 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
 
+### 🖼️ Image Optimization
+
+The project uses a custom multi-resolution image optimization system to ensure fast loading on all devices.
+
+To process new images:
+
+1. Place your target images in `public/images/`.
+2. Run the optimization script:
+
+```bash
+npm run optimize-images
+```
+
+This will generate optimized versions (320px to 1200px) in `public/images/optimized/`. The application uses a custom Next.js loader to dynamically serve the best resolution for the user's screen.
+
 ## 📁 Project Structure
 
 - `pages/index.tsx`: The heart of the application, orchestrating the interactive journey.
