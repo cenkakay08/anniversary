@@ -8,7 +8,7 @@
     "start": "next start",
     "export": "npx serve@latest out",
     "lint": "eslint",
-    "generate-thumbnails": "node tools/generate-thumbnails/generate-thumbnails.mjs",
+    "optimize-images": "node tools/optimize-images/optimize-images.mjs",
     "generate:led-svg": "node tools/led-svg-generator/generate-led-svg.mjs"
   },
   "dependencies": {

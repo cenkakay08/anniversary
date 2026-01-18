@@ -1,6 +1,5 @@
 import React, { memo } from "react";
 import { createPortal } from "react-dom";
-import CustomImage from "./CustomImage";
 import { StaticImageData } from "next/image";
 import CustomImageWrapper from "./CustomImageWrapper";
 
@@ -95,6 +94,7 @@ const DomeViewer = ({
         customImageProps={{
           src: staticImageData,
           alt: alt,
+          sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px",
           style: {
             aspectRatio: staticImageData.width / staticImageData.height,
           },
