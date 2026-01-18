@@ -1,9 +1,14 @@
 import React, { memo } from "react";
 import DomeGallery from "./DomeGallery";
+import { cn } from "@/lib/utils";
 
-const MemoryGallery = () => {
+interface MemoryGalleryProps {
+  className?: string;
+}
+
+const MemoryGallery = ({ className }: MemoryGalleryProps) => {
   return (
-    <div className="h-[450px] w-full shrink-0 sm:h-[600px]">
+    <div className={cn("h-[450px] w-full shrink-0 sm:h-[600px]", className)}>
       <DomeGallery
         grayscale={false}
         maxVerticalRotationDeg={0}

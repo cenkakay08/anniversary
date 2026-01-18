@@ -1,10 +1,20 @@
 import { memo } from "react";
 import TimeDisplay from "./TimeDisplay";
 import NeonText from "./NeonText";
+import { cn } from "@/lib/utils";
 
-const Duration = memo(() => {
+interface DurationProps {
+  className?: string;
+}
+
+const Duration = memo(({ className }: DurationProps) => {
   return (
-    <div className="flex shrink-0 flex-col items-center gap-4 px-4 md:gap-8">
+    <div
+      className={cn(
+        "flex shrink-0 flex-col items-center gap-4 px-4 md:gap-8",
+        className,
+      )}
+    >
       <div className="flex flex-col items-center gap-2">
         <NeonText
           text="Together For..."
