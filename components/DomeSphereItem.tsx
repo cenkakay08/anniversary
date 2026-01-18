@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useCallback } from "react";
 import CustomImage from "./CustomImage";
 import { ItemDef } from "./DomeGallery";
+import imageLoader from "@/lib/imageLoader";
 
 interface DomeSphereItemProps {
   it: ItemDef;
@@ -77,14 +78,15 @@ const DomeSphereItem = ({
         style={imageContainerStyle}
       >
         <CustomImage
-          src={it.thumbStaticImageData}
+          src={it.staticImageData.src}
           alt={it.alt || ""}
           fill
+          sizes="200px"
           className="pointer-events-none object-cover"
           draggable={false}
           style={imageStyle}
-          blurDataURL={it.thumbStaticImageData.blurDataURL}
           placeholder="blur"
+          blurDataURL={it.staticImageData.blurDataURL}
         />
       </div>
     </div>
