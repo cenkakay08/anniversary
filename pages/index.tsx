@@ -27,8 +27,6 @@ const RENDER_DELAYS = {
 } as const;
 
 export default function Home() {
-  const [isContentVisible, setIsContentVisible] = useState(false);
-
   // Sıralı render için state'ler
   const [showDuration, setShowDuration] = useState(false);
   const [showMemoryGallery, setShowMemoryGallery] = useState(false);
@@ -36,13 +34,6 @@ export default function Home() {
   const [showCouplePortrait, setShowCouplePortrait] = useState(false);
 
   const onBackdropAnimationEnd = useCallback(() => {
-    setIsContentVisible(true);
-  }, []);
-
-  // Bileşenleri sıralı olarak render et
-  useEffect(() => {
-    if (!isContentVisible) return;
-
     const timers: NodeJS.Timeout[] = [];
 
     timers.push(
@@ -63,11 +54,7 @@ export default function Home() {
         RENDER_DELAYS.couplePortrait,
       ),
     );
-
-    return () => {
-      timers.forEach(clearTimeout);
-    };
-  }, [isContentVisible]);
+  }, []);
 
   return (
     <>
@@ -75,14 +62,10 @@ export default function Home() {
         className={`relative z-1 flex size-full flex-col items-center gap-6 overflow-auto sm:gap-12 ${geistSans.className} ${geistMono.className}`}
       >
         <WelcomeText onBackdropAnimationEnd={onBackdropAnimationEnd} />
-        {isContentVisible && (
-          <>
-            {showDuration && <Duration />}
-            {showInteractiveHeart && <InteractiveHeart />}
-            {showMemoryGallery && <MemoryGallery />}
-            {showCouplePortrait && <CouplePortrait />}
-          </>
-        )}
+        {showDuration && <Duration />}
+        {showInteractiveHeart && <InteractiveHeart />}
+        {showMemoryGallery && <MemoryGallery />}
+        {showCouplePortrait && <CouplePortrait />}
       </main>
       <FireworksBackground />
     </>
