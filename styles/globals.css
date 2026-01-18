@@ -264,12 +264,9 @@ body {
   background: conic-gradient(
     from var(--neon-angle, 0deg),
     transparent 0deg,
-    transparent 60deg,
-    #a3a3a3 80deg,
-    #d4d4d4 90deg,
-    #e5e5e5 100deg,
-    #a3a3a3 110deg,
-    transparent 130deg,
+    transparent 70deg,
+    rgba(255, 255, 255, 1) 90deg,
+    transparent 110deg,
     transparent 360deg
   );
   -webkit-mask:
@@ -292,12 +289,9 @@ body {
   background: conic-gradient(
     from var(--neon-angle, 0deg),
     transparent 0deg,
-    transparent 60deg,
-    rgba(163, 163, 163, 0.4) 80deg,
-    rgba(212, 212, 212, 0.3) 90deg,
-    rgba(229, 229, 229, 0.3) 100deg,
-    rgba(163, 163, 163, 0.4) 110deg,
-    transparent 130deg,
+    transparent 70deg,
+    rgba(255, 255, 255, 0.4) 90deg,
+    transparent 110deg,
     transparent 360deg
   );
   filter: blur(8px);

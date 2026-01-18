@@ -3,7 +3,6 @@ import FireworksBackground from "@/components/FireworksBackground";
 import { WelcomeText } from "@/components/WelcomeText";
 import Duration from "@/components/Duration";
 import InteractiveHeart from "@/components/InteractiveHeart";
-import AnniversaryMenu from "@/components/AnniversaryMenu";
 import MemoryGallery from "@/components/MemoryGallery";
 import CouplePortrait from "@/components/CouplePortrait";
 import { useState, useCallback } from "react";
