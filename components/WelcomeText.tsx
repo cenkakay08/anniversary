@@ -45,7 +45,7 @@ export const WelcomeText = React.memo(
           {/* Neon Flower Bouquet - shown until lift animation completes */}
           <NeonFlowerBouquet />
           <div
-            className={`absolute ${isLetterAnimationCompleted ? "animate-lift" : "top-1/2 -translate-y-1/2"}`}
+            className={`absolute ${isLetterAnimationCompleted ? "animate-lift" : "top-1/2 -translate-y-1/2"} pb-8`}
             onAnimationEnd={(e) => {
               if (e.target === e.currentTarget && e.animationName === "lift") {
                 setIsLiftAnimationCompleted(true);
