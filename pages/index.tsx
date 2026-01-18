@@ -5,6 +5,7 @@ import Duration from "@/components/Duration";
 import InteractiveHeart from "@/components/InteractiveHeart";
 import AnniversaryMenu from "@/components/AnniversaryMenu";
 import MemoryGallery from "@/components/MemoryGallery";
+import CouplePortrait from "@/components/CouplePortrait";
 import { useState, useCallback, useEffect } from "react";
 
 const geistSans = Geist({
@@ -22,6 +23,7 @@ const RENDER_DELAYS = {
   duration: 0,
   interactiveHeart: 100,
   memoryGallery: 200,
+  couplePortrait: 300,
 } as const;
 
 export default function Home() {
@@ -31,6 +33,7 @@ export default function Home() {
   const [showDuration, setShowDuration] = useState(false);
   const [showMemoryGallery, setShowMemoryGallery] = useState(false);
   const [showInteractiveHeart, setShowInteractiveHeart] = useState(false);
+  const [showCouplePortrait, setShowCouplePortrait] = useState(false);
 
   const onBackdropAnimationEnd = useCallback(() => {
     setIsContentVisible(true);
@@ -54,6 +57,12 @@ export default function Home() {
         RENDER_DELAYS.interactiveHeart,
       ),
     );
+    timers.push(
+      setTimeout(
+        () => setShowCouplePortrait(true),
+        RENDER_DELAYS.couplePortrait,
+      ),
+    );
 
     return () => {
       timers.forEach(clearTimeout);
@@ -71,6 +80,7 @@ export default function Home() {
             {showDuration && <Duration />}
             {showInteractiveHeart && <InteractiveHeart />}
             {showMemoryGallery && <MemoryGallery />}
+            {showCouplePortrait && <CouplePortrait />}
           </>
         )}
       </main>
