@@ -59,19 +59,24 @@ async function generateThumbnails() {
     }
 
     try {
-      await sharp(inputPath)
+      const ext = path.extname(file).toLowerCase();
+      let sharpInstance = sharp(inputPath)
         .rotate() // EXIF orientation'a göre otomatik döndür
         .resize(TARGET_WIDTH, null, {
           // Genişlik sabit, yükseklik orantılı
           withoutEnlargement: true, // Eğer resim zaten küçükse büyütme
-        })
-        .jpeg({ quality: QUALITY, mozjpeg: true }) // Hepsini JPEG'e çevirebiliriz ya da formatı koruyabiliriz.
-        // Ancak tutarlılık için ve sharp varsayılanı olarak,
-        // formatı inputa göre otomatik de yapabiliriz .toFile(outputPath) diyerek.
-        // Burada .toFile ile uzantıya göre otomatik format algılatacağız.
-        // Ama kalite ayarı için explicit olmak gerekebilir.
-        // Şimdilik basitçe resize edip kaydediyoruz, sharp uzantıdan anlar.
-        .toFile(outputPath);
+        });
+
+      // Format'a göre doğru encoder kullan (PNG için transparency korunur)
+      if (ext === ".png") {
+        sharpInstance = sharpInstance.png({ quality: QUALITY });
+      } else if (ext === ".webp") {
+        sharpInstance = sharpInstance.webp({ quality: QUALITY });
+      } else {
+        sharpInstance = sharpInstance.jpeg({ quality: QUALITY, mozjpeg: true });
+      }
+
+      await sharpInstance.toFile(outputPath);
 
       console.log(`✅ Oluşturuldu: ${file}`);
       processedCount++;
