@@ -6,7 +6,8 @@ import InteractiveHeart from "@/components/InteractiveHeart";
 import AnniversaryMenu from "@/components/AnniversaryMenu";
 import MemoryGallery from "@/components/MemoryGallery";
 import CouplePortrait from "@/components/CouplePortrait";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
+import { cn } from "@/lib/utils";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,54 +19,51 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Bileşen render sırası ve gecikmeleri (ms)
-const RENDER_DELAYS = {
-  duration: 0,
-  interactiveHeart: 100,
-  memoryGallery: 200,
-  couplePortrait: 300,
-} as const;
-
 export default function Home() {
-  // Sıralı render için state'ler
-  const [showDuration, setShowDuration] = useState(false);
-  const [showMemoryGallery, setShowMemoryGallery] = useState(false);
-  const [showInteractiveHeart, setShowInteractiveHeart] = useState(false);
-  const [showCouplePortrait, setShowCouplePortrait] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const onBackdropAnimationEnd = useCallback(() => {
-    const timers: NodeJS.Timeout[] = [];
-
-    timers.push(
-      setTimeout(() => setShowDuration(true), RENDER_DELAYS.duration),
-    );
-    timers.push(
-      setTimeout(() => setShowMemoryGallery(true), RENDER_DELAYS.memoryGallery),
-    );
-    timers.push(
-      setTimeout(
-        () => setShowInteractiveHeart(true),
-        RENDER_DELAYS.interactiveHeart,
-      ),
-    );
-    timers.push(
-      setTimeout(
-        () => setShowCouplePortrait(true),
-        RENDER_DELAYS.couplePortrait,
-      ),
-    );
+    setIsVisible(true);
   }, []);
 
   return (
     <>
       <main
-        className={`relative z-1 flex size-full flex-col items-center gap-6 overflow-auto sm:gap-12 ${geistSans.className} ${geistMono.className}`}
+        className={`relative z-1 flex size-full flex-col items-center gap-6 sm:gap-12 ${geistSans.className} ${geistMono.className} ${isVisible ? "overflow-auto" : "overflow-hidden"}`}
       >
         <WelcomeText onBackdropAnimationEnd={onBackdropAnimationEnd} />
-        {showDuration && <Duration />}
-        {showInteractiveHeart && <InteractiveHeart />}
-        {showMemoryGallery && <MemoryGallery />}
-        {showCouplePortrait && <CouplePortrait />}
+        <Duration
+          className={cn(
+            "transition-all delay-0 duration-1000 ease-out",
+            isVisible
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-8 opacity-0",
+          )}
+        />
+        <InteractiveHeart
+          className={cn(
+            "transition-all delay-200 duration-1000 ease-out",
+            isVisible
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-8 opacity-0",
+          )}
+        />
+        <MemoryGallery
+          className={cn(
+            "transition-all delay-400 duration-1000 ease-out",
+            isVisible
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-8 opacity-0",
+          )}
+        />
+        <CouplePortrait
+          className={cn(
+            "transition-all delay-600 duration-1000 ease-out",
+            isVisible
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-8 opacity-0",
+          )}
+        />
       </main>
       <FireworksBackground />
     </>

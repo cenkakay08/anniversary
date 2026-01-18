@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import CustomImageWrapper from "./CustomImageWrapper";
 import womanHeadImg from "@/public/thumbnails/woman_head.png";
 import manHeadImg from "@/public/thumbnails/man_head.png";
+import { cn } from "@/lib/utils";
 
 // Süper efektli animasyonlu kalp bileşeni - Tailwind ile
 const EffectfulHeart = memo(() => {
@@ -118,10 +119,19 @@ const EffectfulHeart = memo(() => {
 
 EffectfulHeart.displayName = "EffectfulHeart";
 
+interface CouplePortraitProps {
+  className?: string;
+}
+
 // Ana bileşen
-const CouplePortrait = memo(() => {
+const CouplePortrait = memo(({ className }: CouplePortraitProps) => {
   return (
-    <div className="flex w-full shrink-0 flex-col items-center gap-4 px-4 pb-8">
+    <div
+      className={cn(
+        "flex w-full shrink-0 flex-col items-center gap-4 px-4 pb-8",
+        className,
+      )}
+    >
       <div className="flex items-center justify-center gap-4 sm:gap-8">
         {/* Kadın kafası - Sol */}
         <div className="relative">

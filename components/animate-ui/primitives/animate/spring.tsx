@@ -17,6 +17,7 @@ import {
   Slot,
   type WithAsChild,
 } from "@/components/animate-ui/primitives/animate/slot";
+import { createPortal } from "react-dom";
 
 type SpringPathConfig = {
   coilCount?: number;
@@ -100,8 +101,10 @@ type SpringContextType = {
   y: MotionValue<number>;
   isDragging: boolean;
   setIsDragging: (isDragging: boolean) => void;
+  centerX: MotionValue<number>;
+  centerY: MotionValue<number>;
   pathConfig: SpringPathConfig;
-  center: { x: number; y: number };
+  refreshCenter: () => void;
 };
 
 const [LocalSpringProvider, useSpring] =
@@ -132,37 +135,41 @@ function SpringProvider({
 
   const childRef = React.useRef<HTMLDivElement>(null);
 
-  const [center, setCenter] = React.useState({ x: 0, y: 0 });
+  const centerX = useMotionValue(0);
+  const centerY = useMotionValue(0);
   const [isDragging, setIsDragging] = React.useState(false);
 
-  React.useLayoutEffect(() => {
-    function update() {
-      requestAnimationFrame(() => {
-        if (childRef.current) {
-          const rect = childRef.current.getBoundingClientRect();
-          // Transform (spring effect) o anki konumunu etkiler.
-          // Sabit merkezi bulmak için mevcut displacement'ı çıkartmalıyız.
-          const currentX = springX.get();
-          const currentY = springY.get();
+  const updateCenter = React.useCallback(() => {
+    if (childRef.current) {
+      const rect = childRef.current.getBoundingClientRect();
+      const currentX = springX.get();
+      const currentY = springY.get();
 
-          setCenter({
-            x: rect.left - currentX + rect.width / 2,
-            y: rect.top - currentY + rect.height / 2,
-          });
-        }
-      });
+      centerX.set(rect.left - currentX + rect.width / 2);
+      centerY.set(rect.top - currentY + rect.height / 2);
     }
+  }, [springX, springY, centerX, centerY]);
 
+  React.useLayoutEffect(() => {
+    let animationFrameId: number;
+
+    const update = () => {
+      updateCenter();
+      animationFrameId = requestAnimationFrame(update);
+    };
+
+    // İlk birkaç karede ve etkileşimlerde güncelleme yap
     update();
 
-    window.addEventListener("resize", update);
-    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", updateCenter);
+    window.addEventListener("scroll", updateCenter, true);
 
     return () => {
-      window.removeEventListener("resize", update);
-      window.removeEventListener("scroll", update, true);
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", updateCenter);
+      window.removeEventListener("scroll", updateCenter, true);
     };
-  }, []);
+  }, [updateCenter]);
 
   React.useEffect(() => {
     if (isDragging) {
@@ -185,8 +192,10 @@ function SpringProvider({
         setIsDragging,
         dragElastic,
         childRef,
-        pathConfig, // Passed config directly
-        center, // Passed calculated center
+        pathConfig,
+        centerX,
+        centerY,
+        refreshCenter: updateCenter,
       }}
       {...props}
     />
@@ -196,21 +205,29 @@ function SpringProvider({
 type SpringProps = React.SVGProps<SVGSVGElement>;
 
 function Spring({ style, ...props }: SpringProps) {
-  const { springX, springY, center, pathConfig } = useSpring();
+  const { springX, springY, centerX, centerY, pathConfig } = useSpring();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Create a transformed motion value that calculates the path string on every frame update
   // without triggering a React render
-  const d = useTransform([springX, springY], ([currentX, currentY]) => {
-    return generateSpringPath(
-      center.x,
-      center.y,
-      center.x + (currentX as number),
-      center.y + (currentY as number),
-      pathConfig,
-    );
-  });
+  const d = useTransform(
+    [springX, springY, centerX, centerY],
+    ([currX, currY, cX, cY]) => {
+      return generateSpringPath(
+        cX as number,
+        cY as number,
+        (cX as number) + (currX as number),
+        (cY as number) + (currY as number),
+        pathConfig,
+      );
+    },
+  );
 
-  return (
+  const svgContent = (
     <svg
       width="100vw"
       height="100vh"
@@ -218,6 +235,7 @@ function Spring({ style, ...props }: SpringProps) {
         position: "fixed",
         inset: 0,
         pointerEvents: "none",
+        zIndex: 40,
         ...style,
       }}
       {...props}
@@ -232,6 +250,10 @@ function Spring({ style, ...props }: SpringProps) {
       />
     </svg>
   );
+
+  if (!mounted) return null;
+
+  return createPortal(svgContent, document.body);
 }
 
 type SpringElementProps = WithAsChild<
@@ -255,6 +277,7 @@ function SpringElement({
     springY,
     x,
     y,
+    refreshCenter,
   } = useSpring();
 
   React.useImperativeHandle(ref, () => childRef.current as HTMLDivElement);
@@ -274,6 +297,7 @@ function SpringElement({
       dragElastic={dragElastic}
       dragMomentum={false}
       onDragStart={() => {
+        refreshCenter();
         setIsDragging(true);
       }}
       onDrag={(_, info) => {

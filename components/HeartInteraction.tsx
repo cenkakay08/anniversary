@@ -25,7 +25,7 @@ const HeartInteraction = memo(() => {
     <SpringProvider>
       <ConnectedFollowingEyes />
       <Spring className="text-gray-400" />
-      <SpringElement className="z-1 cursor-grab active:cursor-grabbing">
+      <SpringElement className="z-50 cursor-grab active:cursor-grabbing">
         <CustomImage src={heartImg} alt="Heart" width={48} draggable={false} />
       </SpringElement>
     </SpringProvider>
