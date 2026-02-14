@@ -125,6 +125,15 @@
   }
 }
 
+@keyframes shaftAppear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
 /* Neon Glow Pulse - Global scope for inline styles */
 @keyframes neonPulse {
   0%,
