@@ -2,7 +2,7 @@ import React from "react";
 
 const NeonHeartArrow: React.FC = () => {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-1/2 bottom-0 z-10 flex items-center justify-center pb-20">
+    <div className="pointer-events-none z-10 flex items-center justify-center">
       <svg
         viewBox="0 0 400 300"
         fill="none"

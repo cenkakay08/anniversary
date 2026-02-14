@@ -98,7 +98,7 @@ const NeonFlowerBouquet: React.FC = () => {
   );
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-1/2 bottom-0 z-0 flex items-end justify-center pb-4">
+    <div className="pointer-events-none z-10 flex items-end justify-center">
       <svg
         viewBox="0 0 400 450"
         fill="none"
