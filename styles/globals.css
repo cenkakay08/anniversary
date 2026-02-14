@@ -84,11 +84,11 @@
   @keyframes lift {
     from {
       top: 50%;
-      transform: translateY(-50%);
+      translate: 0 -50%;
     }
     to {
       top: 0;
-      transform: translateY(0%);
+      translate: 0 0;
     }
   }
 
