@@ -69,10 +69,8 @@ export const WelcomeText = React.memo(
             }
           }}
         >
-          {/* Central visual - shown until lift animation completes */}
-          {centerComponent || <NeonFlowerBouquet />}
           <div
-            className={`absolute ${isLiftStarted ? "animate-lift" : "top-1/2 -translate-y-1/2"} flex flex-col items-center gap-8 pb-32 transition-transform duration-1000`}
+            className={`absolute ${isLiftStarted ? "animate-lift" : ""} top-1/2 flex -translate-y-1/2 flex-col items-center gap-8`}
             onAnimationEnd={(e) => {
               if (e.target === e.currentTarget && e.animationName === "lift") {
                 setIsLiftAnimationCompleted(true);
@@ -92,8 +90,7 @@ export const WelcomeText = React.memo(
               textAlign="center"
               onLetterAnimationComplete={onLetterAnimationComplete}
             />
-
-            {/* Start Button */}
+            {centerComponent || <NeonFlowerBouquet />}
             <button
               onClick={handleStartClick}
               className={`flex items-center justify-center rounded-full border border-white/20 bg-white/10 p-4 text-white backdrop-blur-md transition-all duration-700 hover:scale-105 hover:bg-white/20 active:scale-95 ${
