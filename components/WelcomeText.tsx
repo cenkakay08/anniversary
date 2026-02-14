@@ -4,10 +4,14 @@ import React from "react";
 
 interface WelcomeTextProps {
   onBackdropAnimationEnd?: () => void;
+  text?: string;
 }
 
 export const WelcomeText = React.memo(
-  ({ onBackdropAnimationEnd }: WelcomeTextProps) => {
+  ({
+    onBackdropAnimationEnd,
+    text = "Happy Anniversary, My Love ❤️",
+  }: WelcomeTextProps) => {
     const [isLiftAnimationCompleted, setIsLiftAnimationCompleted] =
       React.useState(false);
     const [isLetterAnimationCompleted, setIsLetterAnimationCompleted] =
@@ -20,7 +24,7 @@ export const WelcomeText = React.memo(
     return (
       <>
         <SplitText
-          text="Happy Anniversary, My Love ❤️"
+          text={text}
           className={`shrink-0 px-4 pt-8 text-center text-4xl font-semibold sm:text-5xl ${isLiftAnimationCompleted ? "" : "opacity-0"}`}
           delay={100}
           duration={0.2}
@@ -53,7 +57,7 @@ export const WelcomeText = React.memo(
             }}
           >
             <SplitText
-              text="Happy Anniversary, My Love ❤️"
+              text={text}
               className={`px-4 pt-8 text-center text-4xl font-semibold sm:text-5xl`}
               delay={100}
               duration={0.2}
