@@ -1,5 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import FireworksBackground from "@/components/FireworksBackground";
+import HeartBackground from "@/components/HeartBackground";
 import { WelcomeText } from "@/components/WelcomeText";
 import Duration from "@/components/Duration";
 import InteractiveHeart from "@/components/InteractiveHeart";
@@ -8,6 +8,7 @@ import CouplePortrait from "@/components/CouplePortrait";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import Head from "next/head";
+import NeonHeartArrow from "@/components/NeonHeartArrow";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,7 @@ export default function ValentineDay() {
   return (
     <>
       <Head>
-        <title>Forever Together | Happy Valentine's Day</title>
+        <title>Forever Together | Happy Valentine&apos;s Day</title>
       </Head>
       <main
         className={`relative z-1 flex size-full flex-col items-center gap-6 sm:gap-12 ${geistSans.className} ${geistMono.className} ${isVisible ? "overflow-auto" : "overflow-hidden"}`}
@@ -37,6 +38,7 @@ export default function ValentineDay() {
         <WelcomeText
           onBackdropAnimationEnd={onBackdropAnimationEnd}
           text="Happy Valentine's Day, My Love ❤️"
+          centerComponent={<NeonHeartArrow />}
         />
         <Duration
           className={cn(
@@ -71,7 +73,7 @@ export default function ValentineDay() {
           )}
         />
       </main>
-      <FireworksBackground />
+      <HeartBackground />
     </>
   );
 }
