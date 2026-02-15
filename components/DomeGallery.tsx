@@ -4,6 +4,7 @@ import DomeSphere from "./DomeSphere";
 import DomeViewer from "./DomeViewer";
 import type { StaticImageData } from "next/image";
 import imageLoader from "@/lib/imageLoader";
+import { useContent } from "@/context/ContentContext";
 
 // Full-size image imports
 import img1 from "@/public/images/IMG20250629125814.jpg";
@@ -65,7 +66,7 @@ import img57 from "@/public/images/mmexport1763047108172.jpg";
 import img58 from "@/public/images/mmexport1763828028347.jpg";
 
 type ImageItem = {
-  staticImageData: StaticImageData;
+  staticImageData: StaticImageData | string;
   alt: string;
 };
 
@@ -91,7 +92,7 @@ type DomeGalleryProps = {
 };
 
 export type ItemDef = {
-  staticImageData: StaticImageData;
+  staticImageData: StaticImageData | string;
   alt: string;
   x: number;
   y: number;
@@ -448,12 +449,24 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
   );
 
   for (let i = 1; i < usedImages.length; i++) {
-    if (
-      usedImages[i].staticImageData.src ===
-      usedImages[i - 1].staticImageData.src
-    ) {
+    const prevSrc =
+      typeof usedImages[i - 1].staticImageData === "string"
+        ? usedImages[i - 1].staticImageData
+        : (usedImages[i - 1].staticImageData as StaticImageData).src;
+
+    const currSrc =
+      typeof usedImages[i].staticImageData === "string"
+        ? usedImages[i].staticImageData
+        : (usedImages[i].staticImageData as StaticImageData).src;
+
+    if (currSrc === prevSrc) {
       for (let j = i + 1; j < usedImages.length; j++) {
-        if (usedImages[j].staticImageData !== usedImages[i].staticImageData) {
+        const nextSrc =
+          typeof usedImages[j].staticImageData === "string"
+            ? usedImages[j].staticImageData
+            : (usedImages[j].staticImageData as StaticImageData).src;
+
+        if (nextSrc !== currSrc) {
           const tmp = usedImages[i];
           usedImages[i] = usedImages[j];
           usedImages[j] = tmp;
@@ -471,7 +484,7 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
 }
 
 export default function DomeGallery({
-  images = DEFAULT_IMAGES,
+  images: propImages = DEFAULT_IMAGES,
   fit = 0.5,
   fitBasis = "auto",
   minRadius = 600,
@@ -508,6 +521,18 @@ export default function DomeGallery({
   const lastDragEndAt = useRef(0);
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const { content } = useContent();
+
+  const images = useMemo(() => {
+    if (content?.galleryImages && content.galleryImages.length > 0) {
+      return content.galleryImages.map((src) => ({
+        staticImageData: src,
+        alt: "Gallery Image",
+      }));
+    }
+    return propImages;
+  }, [content, propImages]);
 
   const selectedImage = useMemo(() => {
     if (selectedIndex === null) return null;
@@ -787,9 +812,17 @@ export default function DomeGallery({
   const openItemFromElement = useCallback(
     (item: ItemDef) => {
       setSelectedIndex(
-        images.findIndex(
-          (img) => img.staticImageData.src === item.staticImageData.src,
-        ),
+        images.findIndex((img) => {
+          const src1 =
+            typeof img.staticImageData === "string"
+              ? img.staticImageData
+              : img.staticImageData.src;
+          const src2 =
+            typeof item.staticImageData === "string"
+              ? item.staticImageData
+              : item.staticImageData.src;
+          return src1 === src2;
+        }),
       );
     },
     [images],

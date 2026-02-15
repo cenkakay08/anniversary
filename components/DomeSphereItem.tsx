@@ -58,6 +58,9 @@ const DomeSphereItem = ({
     [onInteraction],
   );
 
+  const src = typeof it.staticImageData === "string" ? it.staticImageData : it.staticImageData.src;
+  const blurDataURL = typeof it.staticImageData === "string" ? undefined : it.staticImageData.blurDataURL;
+
   return (
     <div
       className="sphere-item absolute m-auto"
@@ -70,7 +73,7 @@ const DomeSphereItem = ({
     >
       <div
         className="item__image absolute block cursor-pointer overflow-hidden transition-transform duration-300"
-        data-src={it.staticImageData.src}
+        data-src={src}
         role="button"
         tabIndex={0}
         aria-label={it.alt || "Open image"}
@@ -78,15 +81,15 @@ const DomeSphereItem = ({
         style={imageContainerStyle}
       >
         <CustomImage
-          src={it.staticImageData.src}
+          src={it.staticImageData}
           alt={it.alt || ""}
           fill
           sizes="200px"
           className="pointer-events-none object-cover"
           draggable={false}
           style={imageStyle}
-          placeholder="blur"
-          blurDataURL={it.staticImageData.blurDataURL}
+          placeholder={blurDataURL ? "blur" : "empty"}
+          blurDataURL={blurDataURL}
         />
       </div>
     </div>

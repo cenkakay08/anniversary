@@ -3,6 +3,7 @@ import CustomImageWrapper from "./CustomImageWrapper";
 import womanHeadImg from "@/public/thumbnails/woman_head.png";
 import manHeadImg from "@/public/thumbnails/man_head.png";
 import { cn } from "@/lib/utils";
+import { useContent } from "@/context/ContentContext";
 
 // Süper efektli animasyonlu kalp bileşeni - Tailwind ile
 const EffectfulHeart = memo(() => {
@@ -125,6 +126,10 @@ interface CouplePortraitProps {
 
 // Ana bileşen
 const CouplePortrait = memo(({ className }: CouplePortraitProps) => {
+  const { content } = useContent();
+  const womanSrc = content?.couplePortrait.woman || womanHeadImg;
+  const manSrc = content?.couplePortrait.man || manHeadImg;
+
   return (
     <div
       className={cn(
@@ -139,7 +144,7 @@ const CouplePortrait = memo(({ className }: CouplePortraitProps) => {
             <CustomImageWrapper
               className="h-full w-full rounded-full"
               customImageProps={{
-                src: womanHeadImg,
+                src: womanSrc,
                 alt: "Woman Portrait",
                 width: 160,
                 height: 160,
@@ -163,7 +168,7 @@ const CouplePortrait = memo(({ className }: CouplePortraitProps) => {
             <CustomImageWrapper
               className="h-full w-full rounded-full"
               customImageProps={{
-                src: manHeadImg,
+                src: manSrc,
                 alt: "Man Portrait",
                 width: 160,
                 height: 160,
