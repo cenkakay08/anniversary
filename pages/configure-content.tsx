@@ -49,6 +49,31 @@ export default function ConfigureContent() {
     }
   }, [formData, updateContent]);
 
+  const uploadFile = async (files: FileList | null): Promise<string[] | null> => {
+    if (!files || files.length === 0) return null;
+
+    const uploadData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+        uploadData.append('file', files[i]);
+    }
+
+    try {
+        const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: uploadData,
+        });
+
+        if (!res.ok) throw new Error('Upload failed');
+
+        const data = await res.json();
+        return data.urls; // Returns array of strings
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        alert('File upload failed');
+        return null;
+    }
+  };
+
   if (isLoading || !formData) return <div className="text-white p-4">Loading...</div>;
 
   return (
@@ -69,13 +94,30 @@ export default function ConfigureContent() {
             </div>
 
             <div>
-                <label className="block text-sm font-medium mb-2 text-gray-300">Welcome Audio URL</label>
-                <input
-                    name="welcomeAudio"
-                    value={formData.welcomeAudio}
-                    onChange={handleChange}
-                    className="w-full bg-gray-800 border border-gray-700 rounded p-2 focus:border-pink-500 focus:outline-none transition-colors"
-                />
+                <label className="block text-sm font-medium mb-2 text-gray-300">Welcome Audio</label>
+                <div className="flex flex-col gap-2">
+                    <input
+                        name="welcomeAudio"
+                        value={formData.welcomeAudio}
+                        onChange={handleChange}
+                        className="w-full bg-gray-800 border border-gray-700 rounded p-2 focus:border-pink-500 focus:outline-none transition-colors text-xs text-gray-400"
+                        placeholder="Or enter URL manually"
+                    />
+                    <input
+                        type="file"
+                        accept="audio/*"
+                        onChange={async (e) => {
+                            const urls = await uploadFile(e.target.files);
+                            if (urls && urls[0]) {
+                                setFormData({ ...formData, welcomeAudio: urls[0] });
+                            }
+                        }}
+                        className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-500 file:text-white hover:file:bg-pink-600"
+                    />
+                    {formData.welcomeAudio && (
+                        <audio controls src={formData.welcomeAudio} className="w-full mt-2 h-8" />
+                    )}
+                </div>
             </div>
 
             <div>
@@ -99,46 +141,129 @@ export default function ConfigureContent() {
             </div>
 
             <div>
-                <label className="block text-sm font-medium mb-2 text-gray-300">Heart Image URL</label>
-                <input
-                    name="interactiveHeartImage"
-                    value={formData.interactiveHeartImage}
-                    onChange={handleChange}
-                    className="w-full bg-gray-800 border border-gray-700 rounded p-2 focus:border-pink-500 focus:outline-none transition-colors"
-                />
+                <label className="block text-sm font-medium mb-2 text-gray-300">Heart Image</label>
+                <div className="flex items-center gap-4">
+                    {formData.interactiveHeartImage && (
+                        <img src={formData.interactiveHeartImage} alt="Heart" className="w-16 h-16 object-contain bg-gray-800 rounded" />
+                    )}
+                    <div className="flex-1">
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                                const urls = await uploadFile(e.target.files);
+                                if (urls && urls[0]) {
+                                    setFormData({ ...formData, interactiveHeartImage: urls[0] });
+                                }
+                            }}
+                            className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-500 file:text-white hover:file:bg-pink-600"
+                        />
+                         <input
+                            name="interactiveHeartImage"
+                            value={formData.interactiveHeartImage}
+                            onChange={handleChange}
+                            className="w-full bg-transparent border-b border-gray-700 text-xs text-gray-500 mt-1 focus:outline-none"
+                            placeholder="URL"
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <div>
                     <label className="block text-sm font-medium mb-2 text-gray-300">Man Portrait</label>
-                    <input
-                        name="couplePortrait.man"
-                        value={formData.couplePortrait.man}
-                        onChange={handleChange}
-                        className="w-full bg-gray-800 border border-gray-700 rounded p-2 focus:border-pink-500 focus:outline-none transition-colors"
-                    />
+                    <div className="flex flex-col gap-2">
+                        {formData.couplePortrait.man && (
+                             <img src={formData.couplePortrait.man} alt="Man" className="w-20 h-20 object-cover rounded-full mx-auto" />
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                                const urls = await uploadFile(e.target.files);
+                                if (urls && urls[0]) {
+                                    setFormData({
+                                        ...formData,
+                                        couplePortrait: { ...formData.couplePortrait, man: urls[0] }
+                                    });
+                                }
+                            }}
+                            className="w-full text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:bg-pink-500 file:text-white"
+                        />
+                    </div>
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium mb-2 text-gray-300">Woman Portrait</label>
-                    <input
-                        name="couplePortrait.woman"
-                        value={formData.couplePortrait.woman}
-                        onChange={handleChange}
-                        className="w-full bg-gray-800 border border-gray-700 rounded p-2 focus:border-pink-500 focus:outline-none transition-colors"
-                    />
+                     <div className="flex flex-col gap-2">
+                        {formData.couplePortrait.woman && (
+                             <img src={formData.couplePortrait.woman} alt="Woman" className="w-20 h-20 object-cover rounded-full mx-auto" />
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                                const urls = await uploadFile(e.target.files);
+                                if (urls && urls[0]) {
+                                    setFormData({
+                                        ...formData,
+                                        couplePortrait: { ...formData.couplePortrait, woman: urls[0] }
+                                    });
+                                }
+                            }}
+                            className="w-full text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:bg-pink-500 file:text-white"
+                        />
+                    </div>
                 </div>
             </div>
 
             <div>
-                <label className="block text-sm font-medium mb-2 text-gray-300">Gallery Images (One URL per line)</label>
-                <textarea
-                    name="galleryImages"
-                    value={formData.galleryImages.join('\n')}
-                    onChange={handleChange}
-                    rows={10}
-                    className="w-full bg-gray-800 border border-gray-700 rounded p-2 text-xs font-mono focus:border-pink-500 focus:outline-none transition-colors"
-                />
+                <label className="block text-sm font-medium mb-2 text-gray-300">Gallery Images</label>
+                <div className="flex flex-col gap-4">
+                    <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={async (e) => {
+                            const urls = await uploadFile(e.target.files);
+                            if (urls && urls.length > 0) {
+                                setFormData({
+                                    ...formData,
+                                    galleryImages: [...formData.galleryImages, ...urls]
+                                });
+                            }
+                        }}
+                        className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-500 file:text-white hover:file:bg-pink-600"
+                    />
+
+                    <div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto p-2 bg-gray-800 rounded">
+                        {formData.galleryImages.map((src, idx) => (
+                            <div key={idx} className="relative group aspect-square">
+                                <img src={src} alt={`Gallery ${idx}`} className="w-full h-full object-cover rounded" />
+                                <button
+                                    onClick={() => {
+                                        const newImages = formData.galleryImages.filter((_, i) => i !== idx);
+                                        setFormData({ ...formData, galleryImages: newImages });
+                                    }}
+                                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+
+                    <textarea
+                        name="galleryImages"
+                        value={formData.galleryImages.join('\n')}
+                        onChange={handleChange}
+                        rows={5}
+                        className="w-full bg-gray-800 border border-gray-700 rounded p-2 text-xs font-mono focus:border-pink-500 focus:outline-none transition-colors"
+                        placeholder="Edit URLs directly if needed..."
+                    />
+                </div>
             </div>
 
             <button
