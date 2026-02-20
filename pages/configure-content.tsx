@@ -52,26 +52,13 @@ export default function ConfigureContent() {
   const uploadFile = async (files: FileList | null): Promise<string[] | null> => {
     if (!files || files.length === 0) return null;
 
-    const uploadData = new FormData();
+    const urls: string[] = [];
     for (let i = 0; i < files.length; i++) {
-        uploadData.append('file', files[i]);
+        // Create a local blob URL for the selected file
+        const url = URL.createObjectURL(files[i]);
+        urls.push(url);
     }
-
-    try {
-        const res = await fetch('/api/upload', {
-            method: 'POST',
-            body: uploadData,
-        });
-
-        if (!res.ok) throw new Error('Upload failed');
-
-        const data = await res.json();
-        return data.urls; // Returns array of strings
-    } catch (error) {
-        console.error('Error uploading file:', error);
-        alert('File upload failed');
-        return null;
-    }
+    return urls;
   };
 
   if (isLoading || !formData) return <div className="text-white p-4">Loading...</div>;
@@ -266,12 +253,20 @@ export default function ConfigureContent() {
                 </div>
             </div>
 
-            <button
-                onClick={saveContent}
-                className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded shadow-lg transform transition-transform hover:scale-[1.02] active:scale-95"
-            >
-                Save Changes
-            </button>
+            <div className="flex flex-col gap-4">
+                <button
+                    onClick={saveContent}
+                    className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded shadow-lg transform transition-transform hover:scale-[1.02] active:scale-95"
+                >
+                    Save Changes
+                </button>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded shadow-lg transform transition-transform hover:scale-[1.02] active:scale-95"
+                >
+                    Reset (Refresh)
+                </button>
+            </div>
         </div>
       </div>
 
