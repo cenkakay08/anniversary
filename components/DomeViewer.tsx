@@ -4,7 +4,7 @@ import { StaticImageData } from "next/image";
 import CustomImageWrapper from "./CustomImageWrapper";
 
 interface DomeViewerProps {
-  staticImageData: StaticImageData;
+  staticImageData: StaticImageData | string;
   alt: string;
   onClose: () => void;
   onNext: () => void;
@@ -59,6 +59,13 @@ const DomeViewer = ({
     [onClose, onNext, onPrev],
   );
 
+  const isStatic = typeof staticImageData !== "string";
+  const width = isStatic ? staticImageData.width : undefined;
+  const height = isStatic ? staticImageData.height : undefined;
+  const aspectRatio = isStatic ? staticImageData.width / staticImageData.height : undefined;
+  const blurDataURL = isStatic ? staticImageData.blurDataURL : undefined;
+  const src = isStatic ? staticImageData.src : staticImageData;
+
   return createPortal(
     <div
       className="fixed inset-0 z-1 content-center bg-black/80 p-4 backdrop-blur-md"
@@ -90,19 +97,26 @@ const DomeViewer = ({
         </svg>
       </button>
       <CustomImageWrapper
-        key={staticImageData.src}
+        key={src}
         customImageProps={{
           src: staticImageData,
           alt: alt,
           sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px",
           style: {
-            aspectRatio: staticImageData.width / staticImageData.height,
+            aspectRatio: aspectRatio,
           },
-          width: staticImageData.width,
-          height: staticImageData.height,
-          className: `mx-auto max-h-full max-w-full rounded-2xl object-contain ${staticImageData.height > staticImageData.width ? "w-fit" : "h-fit w-fit"}`,
-          placeholder: "blur",
-          blurDataURL: staticImageData.blurDataURL,
+          width: width,
+          height: height,
+          fill: !isStatic,
+          className: `mx-auto max-h-full max-w-full rounded-2xl object-contain ${
+            isStatic
+              ? staticImageData.height > staticImageData.width
+                ? "w-fit"
+                : "h-fit w-fit"
+              : "w-full h-full"
+          }`,
+          placeholder: blurDataURL ? "blur" : "empty",
+          blurDataURL: blurDataURL,
           onClick: (e) => e.stopPropagation(),
         }}
       />

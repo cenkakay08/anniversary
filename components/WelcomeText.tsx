@@ -2,6 +2,7 @@ import SplitText from "@/components/SplitText";
 import NeonFlowerBouquet from "@/components/NeonFlowerBouquet";
 import React from "react";
 import { Play } from "lucide-react";
+import { useContent } from "@/context/ContentContext";
 
 interface WelcomeTextProps {
   onBackdropAnimationEnd?: () => void;
@@ -14,9 +15,15 @@ const isProd = process.env.NODE_ENV === "production";
 export const WelcomeText = React.memo(
   ({
     onBackdropAnimationEnd,
-    text = "Happy Anniversary, My Love ❤️",
+    text: propText,
     centerComponent,
   }: WelcomeTextProps) => {
+    const { content } = useContent();
+    const text = propText || content?.welcomeText || "Happy Anniversary, My Love ❤️";
+    const audioSrc = content?.welcomeAudio || (isProd
+      ? "/anniversary/sounds/teoman_kupa_kızı_ve_sinek_valesi.mp3"
+      : "/sounds/teoman_kupa_kızı_ve_sinek_valesi.mp3");
+
     const audioRef = React.useRef<HTMLAudioElement>(null);
 
     const [showButton, setShowButton] = React.useState(false);
@@ -38,11 +45,7 @@ export const WelcomeText = React.memo(
       <>
         <audio loop ref={audioRef}>
           <source
-            src={
-              isProd
-                ? "/anniversary/sounds/teoman_kupa_kızı_ve_sinek_valesi.mp3"
-                : "/sounds/teoman_kupa_kızı_ve_sinek_valesi.mp3"
-            }
+            src={audioSrc}
             type="audio/mpeg"
           />
         </audio>

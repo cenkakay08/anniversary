@@ -2,12 +2,16 @@ import { memo } from "react";
 import TimeDisplay from "./TimeDisplay";
 import NeonText from "./NeonText";
 import { cn } from "@/lib/utils";
+import { useContent } from "@/context/ContentContext";
 
 interface DurationProps {
   className?: string;
 }
 
 const Duration = memo(({ className }: DurationProps) => {
+  const { content } = useContent();
+  const titleText = content?.durationText || "Together For...";
+
   return (
     <div
       className={cn(
@@ -17,7 +21,7 @@ const Duration = memo(({ className }: DurationProps) => {
     >
       <div className="flex flex-col items-center gap-2">
         <NeonText
-          text="Together For..."
+          text={titleText}
           strokeColor="color-mix(in oklab, var(--color-white) 60%, transparent)"
           fontSize="clamp(24px, 4vw, 36px)"
           animationDuration={3}
